@@ -17,9 +17,10 @@ class Conf
 			 "authenticate"=>"If true will send the authenticated url's to the ws",
 			 "timeout_seconds"=>"Connection timeout",
 			 "debug"=>"If true debug messages are printed on the terminal",
+			 "version"=>" Daisy pipeline 2 version",
 			 "null"=> " "}
 
-	CONST_FILTER=["null","exec_line_nix","exec_line_win","base_uri"]
+	CONST_FILTER=["authenticate","version","null","exec_line_nix","exec_line_win","base_uri"]
 
 	def initialize(file)
 		__init_constants__

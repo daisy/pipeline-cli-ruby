@@ -19,7 +19,10 @@ class Dp2
 
 	#private methods
 	def alive! 
-		if !alive?
+		al=alive
+		Ctxt.logger.debug("it's alive: #{alive==nil}")
+		if al==nil
+
 			
 			if Ctxt.conf[Ctxt.conf.class::LOCAL] == true
 				execPath=File::expand_path(Ctxt.conf[Ctxt.conf.class::EXEC_LINE],@basePath)
@@ -43,6 +46,9 @@ class Dp2
 			else
 				raise RuntimeError,"Unable to reach the WS"
 			end
+		else
+			Ctxt.conf[Conf::AUTHENTICATE]=al.authentication
+			Ctxt.conf[Conf::VERSION]=al.version
 		end	
 		return true
 	end
@@ -50,17 +56,17 @@ class Dp2
 	def wait_till_up
 		time_waiting=0
 		time_to_wait=0.33
-		while !alive?  && time_waiting<Ctxt.conf[Ctxt.conf.class::WS_TIMEUP]
+		while !alive  && time_waiting<Ctxt.conf[Ctxt.conf.class::WS_TIMEUP]
 			#Ctxt.logger.debug("going to sleep #{time_to_wait}")
 			sleep time_to_wait
 			time_waiting+=time_to_wait
 			#Ctxt.logger.debug("time_waiting #{time_waiting}")
 		end
-		raise RuntimeError,"WS is not up and I have been waiting for #{time_waiting} s" if !alive?
+		raise RuntimeError,"WS is not up and I have been waiting for #{time_waiting} s" if !alive
 	end
 	#public methods
 	def scripts
-		if alive?
+		if alive
 			map={}
 			scripts =  ScriptsResource.new.getResource
 			scripts.each{|key,val|
@@ -81,7 +87,7 @@ class Dp2
 		Ctxt.logger.debug("Quiet job:#{quiet}")
 		job=nil
 		msgIdx=0
-		#if alive?
+		#if alive
 			job=JobResource.new.postResource(script.to_xml_request,data)
 			if wait==true
 				begin
@@ -101,7 +107,7 @@ class Dp2
 	end
 
 	def job_status(id,msgSeq=0)
-		#if alive?
+		#if alive
 			return JobStatusResource.new(id,msgSeq).getResource
 		#end
 		return nil
@@ -121,10 +127,10 @@ class Dp2
 	def halt(key)
 		return HaltResource.new(key).getResource	
 	end	
-	def alive?
+	def alive
 	  	 return AliveResource.new.getResource 
 	end	
 	
-	private :alive?,:alive!,:wait_till_up
+	private :alive,:alive!,:wait_till_up
 
 end

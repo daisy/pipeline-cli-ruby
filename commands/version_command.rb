@@ -6,7 +6,7 @@ class VersionCommand < Command
 
 	def execute(str_args)
 		puts "Daisy Pipeline 2"
-		puts "Version: 1.3-beta"
+		puts "Version: #{Ctxt.conf[Conf::VERSION]}"
 		puts ""
 		puts "Daisy Pipeline 2 Command Line Interface "
 		puts "Version: #{VERSION}"

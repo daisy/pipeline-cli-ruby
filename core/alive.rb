@@ -2,16 +2,32 @@ require_rel "./core/resource"
 require_rel "./core/result_processor"
 class AliveResource < Resource
 	def initialize
-		super("/jobs",{},AliveProcessor.new)
+		super("/alive",{},AliveProcessor.new)
 	end
 	def getResource
 		@result=Rest.get_resource(buildUri())
-		
 		return @resultProcessor.process(@result)
 	end
 end	
 class AliveProcessor < ResultProcessor
 	def process(input)
-		return input!=nil	
+
+		Ctxt.logger.debug("alive process input : #{input==nil}")
+		return nil if input==nil 
+		Ctxt.logger.debug("from element: #{input.to_s}")
+		doc= Document.new input
+		aliveElem=XPath.first(doc,"//ns:alive",Resource::NS)
+		alive=Alive.new(aliveElem.attributes["mode"],aliveElem.attributes["authentication"],aliveElem.attributes["version"])
+		return alive 
 	end
+end
+
+class Alive
+	attr_accessor :mode,:authentication,:version
+	def initialize(mode,authentication,version)
+		@mode=mode
+		@authentication=authentication
+		@version=version
+	end
+	
 end
