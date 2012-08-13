@@ -11,13 +11,14 @@ class AliveResource < Resource
 end	
 class AliveProcessor < ResultProcessor
 	def process(input)
-
-		Ctxt.logger.debug("alive process input : #{input==nil}")
+		Ctxt.logger.debug("alive process input : #{input!=nil}")
 		return nil if input==nil 
+
 		Ctxt.logger.debug("from element: #{input.to_s}")
 		doc= Document.new input
 		aliveElem=XPath.first(doc,"//ns:alive",Resource::NS)
 		alive=Alive.new(aliveElem.attributes["mode"],aliveElem.attributes["authentication"],aliveElem.attributes["version"])
+		
 		return alive 
 	end
 end

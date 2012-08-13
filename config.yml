@@ -1,5 +1,5 @@
 #WS CONFIGURATION
-host: http://localhost
+host: https://localhost 
 port: 8181
 ws_path: ws   
 ws_timeup: 25 

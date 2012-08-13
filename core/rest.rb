@@ -1,5 +1,5 @@
 # takes care of all the rest calls
-require 'net/http'
+require 'net/https'
 require 'uri'
 require_rel './core/multipart.rb'
 require_rel './core/authentication'
@@ -9,8 +9,15 @@ class Rest
 	@@conn=nil
 	def self.init_conn(authUri)
 		if @@conn==nil
-			@@conn= Net::HTTP.start(authUri.host,authUri.port)
+			@@conn= Net::HTTP.new(authUri.host,authUri.port)
+			if authUri.scheme=="https"
+				Ctxt.logger.debug("Using SSL")
+				#TODO: not verifying, this may be an issue for testing 
+				@@conn.use_ssl = true
+			end
+
 			@@conn.read_timeout = Ctxt.conf[Ctxt.conf.class::TIMEOUT_SECONDS].to_s.to_i
+			@@conn.start()
 		end
 	end
 	def self.get_resource(uri,time_out=nil)
@@ -28,7 +35,11 @@ class Rest
 				return RestError.new(response,response.body)
 			end
 		rescue Exception=>e
-			return nil
+			if e.to_s=='wrong status line: "\025\003\001\000\002\002"'
+				raise RuntimeError,"Looks like the WS is expecting a SSL connection" 
+			else
+				return nil
+			end
 		end
 		##response = Net::HTTP.get_response(authUri)
 		#puts "Response was #{response}"

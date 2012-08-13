@@ -20,24 +20,17 @@ class Dp2
 	#private methods
 	def alive! 
 		al=alive
-		Ctxt.logger.debug("it's alive: #{alive==nil}")
-		if al==nil
+		Ctxt.logger.debug("it's alive: #{alive!=nil}")
+		if !al
 
 			
 			if Ctxt.conf[Ctxt.conf.class::LOCAL] == true
 				execPath=File::expand_path(Ctxt.conf[Ctxt.conf.class::EXEC_LINE],@basePath)
+				Ctxt.logger.debug("executing daisy pipeline...")
 				Thread.new do
 					ex=IO.popen("\"#{execPath}\""+Ctxt.conf[Ctxt.conf.class::NULL]){|line| line.read }
 				end
 
-				#pid=ex.pid
-#				if RUBY_PLATFORM.downcase.include?("linux")
-#					ex.close
-#				end
-				#system('start '+execPath)
-				#will throw execetion the command is not found
-				#pid =ex.pid
-				#Ctxt.logger().debug("ws launched with pid #{pid}")
 				Ctxt.logger().debug("waiting for the ws to come up...")
 				puts "[DP2] Waiting for the WS to come up"
 				wait_till_up
