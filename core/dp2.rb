@@ -42,6 +42,7 @@ class Dp2
 		else
 			Ctxt.conf[Conf::AUTHENTICATE]=al.authentication
 			Ctxt.conf[Conf::VERSION]=al.version
+			Ctxt.logger.debug("version #{Ctxt.conf[Conf::VERSION]}")
 		end	
 		return true
 	end
