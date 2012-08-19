@@ -43,12 +43,12 @@ class CommandScript < Command
 			job=dp2ws.job(@script,@data,!@background,@quiet)
 			#store the id of the current job
 			Helpers.last_id_store(job)
-			if Ctxt.conf[Ctxt.conf.class::LOCAL]!=true && !@background
+			if Ctxt.conf[Ctxt.conf.class::LOCAL]!=true && !@background &&job.status=="DONE"
 				dp2ws.job_zip_result(job.id,@outfile)
 				puts "[DP2] Result stored at #{@outfile}"
 			end
-			
-			if !@persistent
+				
+			if !@persistent && job.status=="DONE"
 				if  dp2ws.delete_job(job.id)
 					puts "[DP2] The job #{job.id} has been deleted from the server"
 				end
