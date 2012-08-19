@@ -18,6 +18,7 @@ Thumbs.db
 #vim files
 .*.sw?
 .*~
-
+#lastid file
+.lastid
 #specific files
 samples
