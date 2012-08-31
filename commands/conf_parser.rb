@@ -4,7 +4,6 @@ class ConfParser
 	end
 
 	def help
-
 		return @parser.help
 	end
 
@@ -12,27 +11,46 @@ class ConfParser
 		unknown=[]
 		nonopts=[]
 		#This parses only the subset of args related to the global configuration items
+		args=cleanSwitches(args)
 		begin
 			@parser.order!(args) do |nop|
 				Ctxt.logger.debug("no option yieled #{nop}")
 				nonopts << nop
 			end
-		rescue OptionParser::InvalidOption => e
-			
+		rescue OptionParser::InvalidOption=> e
 			e.recover args	
 			unknown << args.shift
 			unknown << args.shift if args!=nil and args.size>0 and args.first[0..0]!='-'
 			retry
 		end
 		nonopts.reverse.each { |nonopt| unknown.unshift(nonopt)}
+		unknown=revertSwitches(unknown)
 		return unknown
 	end	
-
+	#Cleans the args of -x they are not valid for conf 
+	#but may be used by other subcommands
+	#hackish dirty way to workaround ths
+	#TODO: reimplement the hole command parsing 
+	#part, optparser is not the best way
+	def cleanSwitches(args)
+		clean=[]
+		args.each do |arg|
+			clean << arg.sub(/-(\w)/,'+\1')
+		end
+		return clean
+	end
+	def revertSwitches(args)
+		clean=[]
+		args.each do |arg|
+			clean << arg.sub(/\+(\w)/,'-\1')
+		end
+		return clean
+	end
 	def build_parser
 		@parser=OptionParser.new do |opts|
 			Conf::CONFIG_ITEMS.each do |name,desc|
 				if Conf::CONST_FILTER.index(name)==nil 	
-					opts.on("--#{name} VALUE",desc+" default("+Ctxt.conf[name].to_s+")") do |v|
+					opts.on("","--#{name} VALUE",desc+" default("+Ctxt.conf[name].to_s+")") do |v|
 						Ctxt.conf[name]=v	
 						Ctxt.conf.update_vals
 					end
