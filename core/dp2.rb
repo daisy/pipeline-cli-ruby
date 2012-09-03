@@ -33,30 +33,33 @@ class Dp2
 
 				Ctxt.logger().debug("waiting for the ws to come up...")
 				puts "[DP2] Waiting for the WS to come up"
-				wait_till_up
+				al=wait_till_up
 				Ctxt.logger().debug("ws up!")
 				puts("[DP2] The daisy pipeline 2 WS is up!")
+				
 			else
 				raise RuntimeError,"Unable to reach the WS"
 			end
-		else
-			Ctxt.conf[Conf::AUTHENTICATE]=al.authentication
-			Ctxt.conf[Conf::VERSION]=al.version
-			Ctxt.logger.debug("version #{Ctxt.conf[Conf::VERSION]}")
-		end	
+		end
+		Ctxt.conf[Conf::AUTHENTICATE]=al.authentication
+		Ctxt.conf[Conf::VERSION]=al.version
+		Ctxt.logger.debug("version #{Ctxt.conf[Conf::VERSION]}")
 		return true
 	end
 
 	def wait_till_up
 		time_waiting=0
 		time_to_wait=0.33
-		while !alive  && time_waiting<Ctxt.conf[Ctxt.conf.class::WS_TIMEUP]
+		al=alive
+		while !al  && time_waiting<Ctxt.conf[Ctxt.conf.class::WS_TIMEUP]
 			#Ctxt.logger.debug("going to sleep #{time_to_wait}")
 			sleep time_to_wait
 			time_waiting+=time_to_wait
 			#Ctxt.logger.debug("time_waiting #{time_waiting}")
+			al=alive
 		end
-		raise RuntimeError,"WS is not up and I have been waiting for #{time_waiting} s" if !alive
+		raise RuntimeError,"WS is not up and I have been waiting for #{time_waiting} s" if !al
+		return al
 	end
 	#public methods
 	def scripts
