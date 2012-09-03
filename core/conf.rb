@@ -53,14 +53,13 @@ class Conf
 
 		if RUBY_PLATFORM =~ /mingw32/
 			@map[EXEC_LINE]=@map[EXEC_LINE_WIN]
-			@map[NULL]=" > NUL 2>&1" 
+			@map[NULL]=" > NUL 2>&1"
 		else
 			@map[EXEC_LINE]=@map[EXEC_LINE_NIX] 
-			@map[NULL]=" &> /dev/null" 
+			@map[NULL]=" 1> /dev/null 2>&1" 
 		end
 		@map[BASE_URI]= @map[HOST]+":"+@map[PORT].to_s+"/"+@map[WS_PATH]
 	end
 
 end	
-	
 	
