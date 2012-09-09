@@ -23,26 +23,22 @@ require_rel './core/conf'
 require_rel './core/ctxt'
 require_rel './core/pipeline_link'
 require_rel './core/helpers'
-require_rel './core/job'
-require_rel './core/multipart.rb'
+require_rel './core/multipart'
 require_rel './core/resource'
+require_rel './core/client'
 require_rel './core/rest'
 require_rel './core/result_processor'
-require_rel './core/scripts'
 require_rel './core/halt'
-require_rel './commands/delete_command'
-require_rel './commands/result_command'
-require_rel './commands/dynamic_commands'
 require_rel './commands/help_command.rb'
-require_rel './commands/job_command'
-require_rel './commands/jobs_command'
+require_rel './commands/client_list_command'
+require_rel './commands/client_create_command'
 require_rel './commands/halt_command'
 require_rel './commands/version_command'
 include REXML
 def main
 	if ARGV.empty?
 	
-		puts "Usage: dp2 command [options]\n"
+		puts "Usage: dp2admin command [options]\n"
 		puts "type dp2 help for more info\n"
 		exit -1	
 	end
@@ -51,31 +47,22 @@ def main
 	else
 		Ctxt.conf(File.expand_path("config.yml",File.dirname(ENV["OCRA_EXECUTABLE"])))
 	end
+
 	cnfParser= ConfParser.new
 	args=cnfParser.parse(ARGV)
 	Ctxt.logger.debug("args after conf parsing #{args}")
 	command=checkargs(args)
 	
-	begin
-		dynCommands=DynamicCommands.get
-	rescue Exception=>e
-		puts "[DP2] ERROR: #{e.message}"
-		exit -1
-	end
 	
 	s_cmds={}
 	d_cmds={}
 	#static commands
-	s_cmds=load(JobsCommand.new,s_cmds)
-	s_cmds=load(JobCommand.new,s_cmds)
-	s_cmds=load(DeleteCommand.new,s_cmds)
-	s_cmds=load(ResultCommand.new,s_cmds)
-	if Ctxt.conf[Ctxt.conf.class::LOCAL].to_s=="true"
-		s_cmds=load(HaltCommand.new,s_cmds)
-	end
+	#
+	s_cmds=load(ClientListCommand.new,s_cmds)
+	s_cmds=load(ClientCreateCommand.new,s_cmds)
+
 	ver_cmd=VersionCommand.new
 	#scripts	
-	dynCommands.each{|cmd| d_cmds[cmd.name]=cmd}
 	s_cmds["help"]=HelpCommand.new(s_cmds,d_cmds,ver_cmd,cnfParser)
 	s_cmds[ver_cmd.name]=ver_cmd
 	error=""

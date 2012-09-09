@@ -10,9 +10,10 @@ class ClientListCommand < Command
 	def execute(str_args)
 		raise RuntimeError,help if str_args.size!=0
 		begin
-			clients=AdminLink.new.job_statuses
+			clients=AdminLink.new.clientList
+			str="[DP2] Client Id ( Role )\n\n" 	
 			clients.each { |client|
-				str="[DP2] Id:#{client.id} (#{client.role})\n" 
+				str+="[DP2] #{client.id} (#{client.role})\n" 
 				puts str
 			}
 			puts "[DP2] No clients found in the WS" if clients.size==0

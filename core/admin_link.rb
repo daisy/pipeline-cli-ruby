@@ -7,6 +7,9 @@ class AdminLink
 	def clientList
 		return ClientListResource.new.getResource
 	end
+	def createClient(client)
+		return ClientListResource.new.postResource(ClientBuilder.new.toXml(client).to_s,nil)
+	end
 
 
 end

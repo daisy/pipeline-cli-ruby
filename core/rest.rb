@@ -53,7 +53,7 @@ class Rest
 			authUri = URI.parse(Authentication.prepare_authenticated_uri(uri))
 			self.init_conn(authUri)
 			request = Net::HTTP::Post.new(authUri.request_uri)
-
+			Ctxt.logger.debug("Request data #{request_contents}")
 			# send the request as the body
 			if data == nil
 				request.body = request_contents
