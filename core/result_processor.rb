@@ -22,3 +22,22 @@ class ResultProcessor
 		raise RuntimeError, "WS Internal Failure:\n\n#{err.desc}"
 	end
 end
+
+
+class ListResultProcessor < ResultProcessor
+	def initialize (xpath,builder) 
+		@xpath=xpath
+		@builder=builder
+	end
+
+	def process(input)
+		raise RuntimeError,"Empty response from the server" if input==nil || input.empty?
+		doc= Document.new input
+		objs=[]
+		XPath.each(doc,@xpath,Resource::NS) { |xobj|
+			objs<<@builder.fromXml(xobj)
+		}
+		Ctxt.logger.debug("Objs retrieved #{objs.size}")
+		return objs 
+	end
+end
