@@ -11,7 +11,7 @@ class DeleteCommand < IdBasedCommand
 			
 		begin
 			getId!(str_args)	
-			res=Dp2.new.delete_job(@id)
+			res=PipelineLink.new.delete_job(@id)
 			str="The job wasn't deleted"
 			if res 
 				str="Job #{@id} has been deleted\n" 

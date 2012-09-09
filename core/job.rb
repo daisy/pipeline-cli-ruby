@@ -49,7 +49,7 @@ class JobStatusResultProcessor < ResultProcessor
 
 		doc= Document.new input
 		xjob = XPath.first(doc,"//ns:job",Resource::NS)
-		job=Job.fromXml(xjob)
+		job=JobBuilder.new.fromXml(xjob)
 		Ctxt.logger.debug(job.to_s)
 		return  job
 	end
@@ -72,13 +72,14 @@ class JobZipResultProcessor < ResultProcessor
 		raise RuntimeError,"Job #{resource.params[:id]} not found"
 	end
 end
+#TODO: load via ResultListProcessor
 class JobsStatusResultProcessor < ResultProcessor
 	def process(input)
 		raise RuntimeError,"Empty job result from server " if input==nil
 		doc= Document.new input
 		jobs=[]
 		XPath.each(doc,"//ns:job",Resource::NS) { |xjob|
-			jobs.push(Job.fromXml(xjob))
+			jobs.push(JobBuilder.new.fromXml(xjob))
 		}
 		Ctxt.logger.debug(" Jobs retrieved #{jobs.size}")
 		return  jobs
@@ -112,7 +113,21 @@ class Job
 		@id=id
 		@messages=[]
 	end
-	def self.fromXml(element)
+
+	def to_s
+		s="Job Id: #{@id}\n"
+		s+="\t Status: #{@status}\n"
+		s+="\t Script: #{@script.uri}\n" if @script!=nil
+		s+="\t Result: #{@result}\n" if @result!=nil
+		s+="\t Log: #{@log}\n" if @log!=nil
+		s+="\t Messages: #{@messages.size}\n"
+		s+="\n"
+		return s	
+	end	
+
+end
+class JobBuilder
+	def fromXml(element)
 		Ctxt.logger.debug("from element: #{element.to_s}")
 		job=Job.new(element.attributes["id"])
 		job.status=element.attributes["status"]
@@ -134,16 +149,5 @@ class Job
 	
 		return job
 	end
-
-	def to_s
-		s="Job Id: #{@id}\n"
-		s+="\t Status: #{@status}\n"
-		s+="\t Script: #{@script.uri}\n" if @script!=nil
-		s+="\t Result: #{@result}\n" if @result!=nil
-		s+="\t Log: #{@log}\n" if @log!=nil
-		s+="\t Messages: #{@messages.size}\n"
-		s+="\n"
-		return s	
-	end	
 
 end

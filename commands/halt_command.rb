@@ -11,7 +11,7 @@ class HaltCommand < Command
 			
 		begin
 			@parser.parse(str_args)
-			res=Dp2.new.halt(get_key)
+			res=PipelineLink.new.halt(get_key)
 			puts "[DP2] The daisy pipeline 2 WS has been halted"
 		rescue Exception => e
 			 

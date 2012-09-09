@@ -11,7 +11,7 @@ class JobCommand < IdBasedCommand
 			
 		begin
 			getId!(str_args)	
-			job=Dp2.new.job_status(@id,0)
+			job=PipelineLink.new.job_status(@id,0)
 			str="No such job"
 			if job != nil 
 				str="Job Id:#{job.id}\n" 

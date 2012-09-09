@@ -9,7 +9,7 @@ class JobsCommand < Command
 	def execute(str_args)
 		raise RuntimeError,help if str_args.size!=0
 		begin
-			jobs=Dp2.new.job_statuses
+			jobs=PipelineLink.new.job_statuses
 			jobs.each { |job|
 				str="[DP2] Job Id:#{job.id}\n" 
 				str+="\t Status: #{job.status}\n" 

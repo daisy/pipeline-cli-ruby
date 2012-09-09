@@ -1,10 +1,10 @@
-require_rel "./core/dp2"
+require_rel "./core/pipeline_link"
 require_rel "./core/helpers"
 class DynamicCommands
 
 	def self.get
 		commands=[]
-		scripts=Dp2.new.scripts
+		scripts=PipelineLink.new.scripts
 		scripts.values.each { |script| commands.push(CommandScript.new(script))}
 		return commands
 	end
@@ -30,7 +30,7 @@ class CommandScript < Command
 	end
 	def execute(str_args)
 		begin
-			dp2ws=Dp2.new
+			dp2ws=PipelineLink.new
 			@parser.parse(str_args)	
 			raise RuntimeError,"dp2 is running in remote mode, so you need to supply a zip file containing the data (--data)" if Ctxt.conf[Ctxt.conf.class::LOCAL]!=true && @data==nil
 			raise RuntimeError,"dp2 is running in remote mode, so you need to supply an output file to store the results (--file)" if Ctxt.conf[Ctxt.conf.class::LOCAL]!=true && @outfile==nil && !@background
