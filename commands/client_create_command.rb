@@ -12,6 +12,9 @@ class ClientCreateCommand < Command
 		begin
 			@parser.parse(str_args)
 			Ctxt.logger.debug("client #{@client.to_s}")
+			if @client.id.empty? || @client.secret.empty? || @client.role.empty?
+				raise RuntimeError," Client id, secret and role are mandatory"
+			end
 			client=AdminLink.new.createClient(@client)
 			str="[DP2] Client succesfully created\n#{client}\n"	
 			puts str
@@ -20,7 +23,7 @@ class ClientCreateCommand < Command
 			Ctxt.logger.debug(e)
 			puts "\n[DP2] ERROR: #{e.message}\n\n"
 
-			puts to_s 
+			puts help
 		end
 	end
 	def help
@@ -30,13 +33,13 @@ class ClientCreateCommand < Command
 		return "#{@name}\t\t\t\tShows the detailed status for a single job"	
 	end
 	def build_parser
-		
+		roles=(Client::ROLES + Client::ROLES.map{|i| i.downcase})
 		@parser=OptionParser.new do |opts|
-			opts.on("-i CLIENTID","--id CLIENTID","Client id") do |v|
+			opts.on("-i CREATE","--id CLIENTID","Client id") do |v|
 				@client.id =v
 			end
-			opts.on("-r ROLE","--role ROLE",Client::ROLES,Client::ROLES,"Client role") do |v|
-				@client.role=v
+			opts.on("-r ROLE","--role ROLE ",Client::ROLES,roles,"Client role  (#{Client::ROLES.join(',')})") do |v|
+				@client.role=v.upcase
 			end
 			opts.on("-c CONTACT","--contact CONTACT","Client contact e-mail") do |v|
 				@client.contact=v

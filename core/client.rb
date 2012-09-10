@@ -12,6 +12,11 @@ class ClientsResultProcessor < ListResultProcessor
 	def initialize
 		super("//ns:client",ClientBuilder.new)
 	end
+
+	def badRequest(err,resource)
+		Ctxt.logger.debug("WS 400: "+resource.buildUri)
+		raise RuntimeError,err.desc
+	end
 end
 
 

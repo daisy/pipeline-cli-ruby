@@ -10,6 +10,11 @@ class ResultProcessor
 		raise RuntimeError, "Resource not found"
 
 	end
+	def badRequest(err,resource)
+		Ctxt.logger.debug("WS 400: "+resource.buildUri)
+		raise RuntimeError, "Bad Request"
+
+	end
 	def error(err,resource)
 		Ctxt.logger.debug("Generic error: "+resource.buildUri)
 		raise RuntimeError, "WS Failure"
@@ -18,7 +23,6 @@ class ResultProcessor
 		Ctxt.logger.debug("WS 500 :"+resource.buildUri)
 		Ctxt.logger.debug("WS 500 :"+err.desc) if err.desc != nil
 		Ctxt.logger.debug("WS 500 :"+err.trace) if err.trace != nil
-		#TODO this should be a xml treat it!
 		raise RuntimeError, "WS Internal Failure:\n\n#{err.desc}"
 	end
 end
