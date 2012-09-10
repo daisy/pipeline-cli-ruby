@@ -35,6 +35,8 @@ class Resource
 					return @resultProcessor.notFound(result,self)
 				when Net::HTTPBadRequest
 					return @resultProcessor.badRequest(result,self)
+				when Net::HTTPUnauthorized
+					return @resultProcessor.unauthorized(result,self)
 				else
 					return @resultProcessor.internalError(result,self)
 			end

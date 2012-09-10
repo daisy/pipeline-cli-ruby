@@ -15,6 +15,11 @@ class ResultProcessor
 		raise RuntimeError, "Bad Request"
 
 	end
+	def unauthorized(err,resource)
+		Ctxt.logger.debug("WS 401: "+resource.buildUri)
+		raise RuntimeError, "Not authorised to access WS, please check the clientid and secret values in your configuration"
+
+	end
 	def error(err,resource)
 		Ctxt.logger.debug("Generic error: "+resource.buildUri)
 		raise RuntimeError, "WS Failure"
