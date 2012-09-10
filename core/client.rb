@@ -18,6 +18,24 @@ class ClientsResultProcessor < ListResultProcessor
 		raise RuntimeError,err.desc
 	end
 end
+class DeleteClientResource < Resource
+	def initialize(id)
+		super("/admin/clients",{:id=>id},DeleteClientResultProcessor.new)
+	end	
+	def buildUri
+    		uri = "#{Ctxt.conf[Ctxt.conf.class::BASE_URI]}#{@path}/#{@params[:id]}"
+		Ctxt.logger.debug("URI:"+uri)
+		uri
+	end
+end
+class DeleteClientResultProcessor < ResultProcessor
+	def process(bool)
+		return bool
+	end
+	def notFound(err,resource)
+		raise RuntimeError,"Client #{resource.params[:id]} not found"
+	end
+end
 
 
 class Client

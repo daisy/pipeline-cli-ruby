@@ -30,7 +30,7 @@ class ClientCreateCommand < Command
 		return @parser.help
 	end
 	def to_s
-		return "#{@name}\t\t\t\tShows the detailed status for a single job"	
+		return "#{@name}\t\t\t\tCreates a new client"	
 	end
 	def build_parser
 		roles=(Client::ROLES + Client::ROLES.map{|i| i.downcase})

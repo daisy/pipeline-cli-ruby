@@ -11,16 +11,15 @@ class ClientListCommand < Command
 		raise RuntimeError,help if str_args.size!=0
 		begin
 			clients=AdminLink.new.clientList
-			str="[DP2] Client Id ( Role )\n\n" 	
+			CliWritter::ln "Client Id ( Role )\n\n" 	
 			clients.each { |client|
-				str+="[DP2] #{client.id} (#{client.role})\n" 
-				puts str
+				CliWritter::ln " #{client.id} (#{client.role})\n" 
 			}
-			puts "[DP2] No clients found in the WS" if clients.size==0
+			CliWritter::ln "No clients found in the WS" if clients.size==0
 			
 		rescue Exception => e
 			Ctxt.logger.debug(e)
-			puts "\n[DP2] ERROR: #{e}\n\n"
+			CliWritter::err "#{e}\n\n"
 		end
 	end
 	def help
