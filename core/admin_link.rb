@@ -3,6 +3,9 @@ class AdminLink
 		#init the link to the pipeline
 		@plink=PipelineLink.new	
 	end
+	def client(id)
+		return ClientListResource.new(id).getResource
+	end
 
 	def clientList
 		return ClientListResource.new.getResource

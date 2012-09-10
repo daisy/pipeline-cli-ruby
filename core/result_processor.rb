@@ -41,6 +41,7 @@ class ListResultProcessor < ResultProcessor
 
 	def process(input)
 		raise RuntimeError,"Empty response from the server" if input==nil || input.empty?
+		Ctxt.logger.debug("from server #{input}")
 		doc= Document.new input
 		objs=[]
 		XPath.each(doc,@xpath,Resource::NS) { |xobj|

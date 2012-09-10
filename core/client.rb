@@ -3,8 +3,23 @@ require_rel './core/resource'
 require_rel "./core/result_processor"
 
 class ClientListResource < Resource
-	def initialize
-		super("/admin/clients",{},ClientsResultProcessor.new)
+	def initialize(*id)
+		if id.empty? 
+			super("/admin/clients",{},ClientsResultProcessor.new)
+		else
+			super("/admin/clients",{:id=>id},ClientsResultProcessor.new)
+
+		end
+	end	
+	def buildUri
+		
+		if @params[:id]!=nil
+			uri = "#{Ctxt.conf[Ctxt.conf.class::BASE_URI]}#{@path}/#{@params[:id]}"
+			Ctxt.logger.debug("URI:"+uri)
+		else
+			uri=super
+		end
+		uri
 	end
 end
 
