@@ -1,15 +1,14 @@
 class VersionCommand < Command
-	VERSION="1.1.0"
 	def initialize()
 		super("version")	
 	end
 
 	def execute(str_args)
 		puts "Daisy Pipeline 2"
-		puts "Version: #{Ctxt.conf[Conf::VERSION]}"
+		puts "Version: #{Ctxt.conf[Conf::WS_VERSION]}"
 		puts ""
-		puts "Daisy Pipeline 2 Command Line Interface "
-		puts "Version: #{VERSION}"
+		puts Ctxt.conf[Conf::PROG_NAME]  
+		puts "Version: #{Ctxt.conf[Conf::VERSION]}"
 		puts ""
 	end
 	def to_s

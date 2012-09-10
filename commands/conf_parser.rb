@@ -51,6 +51,7 @@ class ConfParser
 			Conf::CONFIG_ITEMS.each do |name,desc|
 				if Conf::CONST_FILTER.index(name)==nil 	
 					opts.on("--#{name} VALUE",desc+" default("+Ctxt.conf[name].to_s+")") do |v|
+						Ctxt.logger.debug("Configuring#{name} with value #{v}") 
 						Ctxt.conf[name]=v	
 						Ctxt.conf.update_vals
 					end

@@ -34,7 +34,7 @@ class HelpCommand < Command
 		if cmd=="pipeliners"
 			showpipeliners!	
 		elsif  cmd=="COMMAND"
-			raise "with COMMAND I meant an available command name like '#{@commands.keys.shuffle[0]}'"
+			raise "with COMMAND I meant an available command name like '#{@commands.keys.shuffle[4]}'"
 		elsif cmd==nil || cmd.size==0
 			if @global
 				puts @cnf_parser.help
@@ -53,10 +53,12 @@ class HelpCommand < Command
 
 	end
 	def help
-		s="Usage: dp2 command [options]\n\n"
-		s+="\nScript commands:\n\n"
-		@d_commands.each{|name,cmd| s+="#{cmd.to_s}\n"}
-		s+="\nGeneral commands:\n\n"
+		s="Usage: #{Ctxt.conf[Conf::PROG_NAME]} command [options]\n\n"
+		if !@d_commands.empty?
+			s+="\nScript commands:\n\n"
+			@d_commands.each{|name,cmd| s+="#{cmd.to_s}\n"}
+			s+="\nGeneral commands:\n\n"
+		end
 		
 		@s_commands.each{|name,cmd| s+="#{cmd.to_s}\n" if name!="help" && name!="version"}
 
