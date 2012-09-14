@@ -84,6 +84,7 @@ class PipelineLink
 		msgIdx=0
 		#if alive
 			job=JobResource.new.postResource(script.to_xml_request,data)
+			CliWriter::ln "Job with id #{job.id} submitted to the server"
 			if wait==true
 				begin
 					sleep 1.5 
@@ -110,7 +111,7 @@ class PipelineLink
 	end
 
 	def job_statuses
-		return JobsStatusResource.new.getResource
+		return JobStatusResource.new.getResource
 	end
 
 	def delete_job(id)

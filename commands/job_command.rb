@@ -11,6 +11,7 @@ class JobCommand < IdBasedCommand
 			
 		begin
 			getId!(str_args)	
+			raise RuntimeError,"JOBID is mandatory" if @id.empty?
 			job=PipelineLink.new.job_status(@id,0)
 			str="No such job"
 			if job != nil 
@@ -28,7 +29,7 @@ class JobCommand < IdBasedCommand
 			Ctxt.logger.debug(e)
 			CliWriter::err "#{e.message}\n\n"
 
-			puts to_s 
+			puts help 
 		end
 	end
 	def help

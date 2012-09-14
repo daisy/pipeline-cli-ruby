@@ -11,6 +11,7 @@ class DeleteCommand < IdBasedCommand
 			
 		begin
 			getId!(str_args)	
+			raise RuntimeError,"JOBID is mandatory" if @id.empty?
 			res=PipelineLink.new.delete_job(@id)
 			str="The job wasn't deleted"
 			if res 
@@ -22,7 +23,7 @@ class DeleteCommand < IdBasedCommand
 			 
 			Ctxt.logger.debug(e)
 			CliWriter::err "#{e}\n\n"
-			puts to_s 
+			puts help 
 		end
 	end
 	def help

@@ -11,16 +11,6 @@ class ClientListResource < Resource
 
 		end
 	end	
-	def buildUri
-		
-		if @params[:id]!=nil
-			uri = "#{Ctxt.conf[Ctxt.conf.class::BASE_URI]}#{@path}/#{@params[:id]}"
-			Ctxt.logger.debug("URI:"+uri)
-		else
-			uri=super
-		end
-		uri
-	end
 end
 
 class ClientsResultProcessor < ListResultProcessor
@@ -37,21 +27,8 @@ class ClientResultProcessor < ClientsResultProcessor
 end
 class DeleteClientResource < Resource
 	def initialize(id)
-		super("/admin/clients",{:id=>id},DeleteClientResultProcessor.new)
+		super("/admin/clients",{:id=>id},DeleteResultProcessor.new("Client"))
 	end	
-	def buildUri
-    		uri = "#{Ctxt.conf[Ctxt.conf.class::BASE_URI]}#{@path}/#{@params[:id]}"
-		Ctxt.logger.debug("URI:"+uri)
-		uri
-	end
-end
-class DeleteClientResultProcessor < ResultProcessor
-	def process(bool)
-		return bool
-	end
-	def notFound(err,resource)
-		raise RuntimeError,"Client #{resource.params[:id]} not found"
-	end
 end
 
 

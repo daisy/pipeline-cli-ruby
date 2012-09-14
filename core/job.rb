@@ -1,23 +1,32 @@
 require_rel './core/resource'
 class JobResource < Resource
 	def initialize
-		super("/jobs",{},JobPostResultProcessor.new)
+		super("/jobs",{},JobStatusResultProcessor.new)
 	end	
 end
-
-class DeleteJobResource < Resource
-	def initialize(id)
-		super("/jobs",{:id=>id},DeleteJobResultProcessor.new)
+class JobStatusResource < Resource
+	def initialize(id=nil,seq=nil)
+		args={}
+		args[:id]=id if id!=nil
+		args[:seq]=seq if seq!=nil
+		if id == nil
+			super("/jobs",args,JobsStatusResultProcessor.new)
+		else
+			super("/jobs",args,JobStatusResultProcessor.new)
+		end
 	end	
 	def buildUri
-    		uri = "#{Ctxt.conf[Ctxt.conf.class::BASE_URI]}#{@path}/#{@params[:id]}"
+		uri=super
+		if @params[:seq] != nil
+			uri = "#{uri}?msgSeq=#{@params[:seq]}"
+		end
 		Ctxt.logger.debug("URI:"+uri)
 		uri
 	end
 end
-class JobsStatusResource < Resource
-	def initialize
-		super("/jobs",{},JobsStatusResultProcessor.new)
+class DeleteJobResource < Resource
+	def initialize(id)
+		super("/jobs",{:id=>id},DeleteResultProcessor.new("Job"))
 	end	
 end
 class JobResultZipResource < Resource
@@ -25,38 +34,12 @@ class JobResultZipResource < Resource
 		super("/jobs",{:id=>id},JobZipResultProcessor.new(output_path))
 	end	
 	def buildUri
-    		uri = "#{Ctxt.conf[Ctxt.conf.class::BASE_URI]}#{@path}/#{@params[:id]}/result"
+    		uri = "#{super}/result"
 		Ctxt.logger.debug("URI:"+uri)
 		uri
 	end
 end
-class JobStatusResource < Resource
-	def initialize(id,seq=0)
-		super("/jobs",{:id=>id,:seq=>seq},JobStatusResultProcessor.new)
-	end
-	def buildUri
-    		uri = "#{Ctxt.conf[Ctxt.conf.class::BASE_URI]}#{@path}/#{@params[:id]}?msgSeq=#{@params[:seq]}"
-		Ctxt.logger.debug("URI:"+uri)
-		uri
-	end
-			
-end
 
-class JobStatusResultProcessor < ResultProcessor
-	def process(input)
-		raise RuntimeError,"Empty result from WS" if input==nil
-		#return Job.new if input==nil
-
-		doc= Document.new input
-		xjob = XPath.first(doc,"//ns:job",Resource::NS)
-		job=JobBuilder.new.fromXml(xjob)
-		Ctxt.logger.debug(job.to_s)
-		return  job
-	end
-	def notFound(err,resource)
-		raise RuntimeError,"Job #{resource.params[:id]} not found"
-	end
-end
 
 class JobZipResultProcessor < ResultProcessor
 	def initialize(path)
@@ -72,32 +55,17 @@ class JobZipResultProcessor < ResultProcessor
 		raise RuntimeError,"Job #{resource.params[:id]} not found"
 	end
 end
-#TODO: load via ResultListProcessor
-class JobsStatusResultProcessor < ResultProcessor
-	def process(input)
-		raise RuntimeError,"Empty job result from server " if input==nil
-		doc= Document.new input
-		jobs=[]
-		XPath.each(doc,"//ns:job",Resource::NS) { |xjob|
-			jobs.push(JobBuilder.new.fromXml(xjob))
-		}
-		Ctxt.logger.debug(" Jobs retrieved #{jobs.size}")
-		return  jobs
+
+class JobsStatusResultProcessor < ListResultProcessor
+	def initialize
+		super "//ns:job",JobBuilder.new	
 	end
 end
-class JobPostResultProcessor < ResultProcessor
-	def process(input)
-		job=JobStatusResultProcessor.new.process(input)
-		CliWriter::ln "Job with id #{job.id} submitted to the server"
-		return job 
-	end
-end
-class DeleteJobResultProcessor < ResultProcessor
-	def process(bool)
-		return bool
-	end
-	def notFound(err,resource)
-		raise RuntimeError,"Job #{resource.params[:id]} not found"
+class JobStatusResultProcessor < JobsStatusResultProcessor
+	#list of one element
+	def process (input)
+		list= super	
+		return list[0]
 	end
 end
 class Message

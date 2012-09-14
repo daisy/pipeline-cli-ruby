@@ -11,8 +11,13 @@ class Resource
 	end
 
 	def buildUri
-    		uri = "#{Ctxt.conf[Ctxt.conf.class::BASE_URI]}#{@path}"
-		Ctxt.logger.debug(uri)
+		if @params[:id]!=nil
+			uri = "#{Ctxt.conf[Ctxt.conf.class::BASE_URI]}#{@path}/#{@params[:id]}"
+		else
+    			uri = "#{Ctxt.conf[Ctxt.conf.class::BASE_URI]}#{@path}"
+		end
+		#other args
+		Ctxt.logger.debug("URI"+uri)
 		uri
 	end	
 	def getResource
