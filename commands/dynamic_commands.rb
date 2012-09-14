@@ -24,6 +24,7 @@ class CommandScript < Command
 		@data=nil
 		@outfile=nil
 		@quiet=false
+		@source=nil
 		
 		build_modifiers
 		build_parser
@@ -143,6 +144,7 @@ class CommandScript < Command
 			+"\t\t Type:#{opt[:type]}\n\n"
 			@opt_modifiers[modifier]=opt
 			
+			
 		}
 		@script.inputs.each {|input|
 			modifier="--i-#{input[:name]}"
@@ -150,6 +152,7 @@ class CommandScript < Command
 			+"\t\t Media type:#{input[:mediaType]}\n"\
 			+"\t\t Sequence allowed:#{input[:sequenceAllowed]}\n\n"
 			@input_modifiers[modifier]=input
+			@source==input if input[:name]=="source"
 		}
 		@script.outputs.each {|out|
 			modifier="--o-#{out[:name]}"

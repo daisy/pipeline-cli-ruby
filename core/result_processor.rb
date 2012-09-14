@@ -12,7 +12,7 @@ class ResultProcessor
 	end
 	def badRequest(err,resource)
 		Ctxt.logger.debug("WS 400: "+resource.buildUri)
-		raise RuntimeError, "Bad Request"
+			raise RuntimeError, "Bad Request: #{err.desc}"
 
 	end
 	def unauthorized(err,resource)
