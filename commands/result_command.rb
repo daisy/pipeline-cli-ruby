@@ -15,11 +15,11 @@ class ResultCommand < IdBasedCommand
 			getId!(str_args)
 			raise RuntimeError,"no output file provided" if @output==nil
 			res=PipelineLink.new.job_zip_result(@id,@output)
-			puts "[DP2] Job #{@id} stored at #{res}\n"
+			CliWriter::ln "Job #{@id} stored at #{res}\n"
 		rescue Exception => e
 			 
 			Ctxt.logger.debug(e)
-			puts "\n[DP2] ERROR: #{e}\n\n"
+			CliWriter::err "#{e}\n\n"
 			puts help
 		end
 	end

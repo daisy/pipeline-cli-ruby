@@ -11,16 +11,16 @@ class JobsCommand < Command
 		begin
 			jobs=PipelineLink.new.job_statuses
 			jobs.each { |job|
-				str="[DP2] Job Id:#{job.id}\n" 
+				str="Job Id:#{job.id}\n" 
 				str+="\t Status: #{job.status}\n" 
-				puts str
+				CliWriter::ln str
 			}
-			puts "[DP2] No jobs were found on the WS" if jobs.size==0
+			CliWriter::ln "No jobs were found on the WS" if jobs.size==0
 			
 		rescue Exception => e
 			 
 			Ctxt.logger.debug(e)
-			puts "\n[DP2] ERROR: #{e}\n\n"
+			CliWriter::err "#{e}\n\n"
 			#puts to_s
 		end
 	end

@@ -88,7 +88,7 @@ end
 class JobPostResultProcessor < ResultProcessor
 	def process(input)
 		job=JobStatusResultProcessor.new.process(input)
-		puts "[DP2] Job with id #{job.id} submitted to the server"
+		CliWriter::ln "Job with id #{job.id} submitted to the server"
 		return job 
 	end
 end

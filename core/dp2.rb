@@ -31,10 +31,10 @@ class PipelineLink
 				end
 
 				Ctxt.logger().debug("waiting for the ws to come up...")
-				puts "[DP2] Waiting for the WS to come up"
+				CliWriter::ln "Waiting for the WS to come up"
 				al=wait_till_up
 				Ctxt.logger().debug("ws up!")
-				puts("[DP2] The daisy pipeline 2 WS is up!")
+				CliWriter::ln("The daisy pipeline 2 WS is up!")
 			else
 				raise RuntimeError,"Unable to reach the WS"
 			end
@@ -70,7 +70,7 @@ class PipelineLink
 					map[script.nicename]=script
 				rescue Exception=>e
 					Ctxt.logger.debug(e.message)
-					puts "[DP2] (Ignoring #{key})"
+					CliWriter::ln "(Ignoring #{key})"
 				end
 			}
 			return map
@@ -89,7 +89,7 @@ class PipelineLink
 					sleep 1.5 
 					job=job_status(job.id,msgIdx)
 					if not quiet
-						job.messages.each{|msg| puts "[WS] "+ msg.to_s} 
+						job.messages.each{|msg| CliWriter::ws msg.to_s} 
 					end
 					if job.messages.size > 0 
 						msgIdx=(Integer(job.messages[-1].seq)+1).to_s

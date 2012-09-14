@@ -136,7 +136,7 @@ class Rest
 		begin
 			return @@conn.post(url.request_uri, query, headers)
 		rescue => e
-			puts "[DP2] POST Failed #{e}... #{Time.now}"
+			CliWriter::ln "POST Failed #{e}... #{Time.now}"
 		end
 	end
 

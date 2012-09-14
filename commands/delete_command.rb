@@ -17,11 +17,11 @@ class DeleteCommand < IdBasedCommand
 				str="Job #{@id} has been deleted\n" 
 				str+= "\n"
 			end
-			puts "[DP2] "+str
+			CliWriter::ln str
 		rescue Exception => e
 			 
 			Ctxt.logger.debug(e)
-			puts "\n[DP2] ERROR: #{e}\n\n"
+			CliWriter::err "#{e}\n\n"
 			puts to_s 
 		end
 	end

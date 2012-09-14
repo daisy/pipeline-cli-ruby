@@ -22,11 +22,11 @@ class JobCommand < IdBasedCommand
 				end
 				str+= "\n"
 			end
-			puts "[DP2] "+ str
+			CliWriter::ln str
 		rescue Exception => e
 			 
 			Ctxt.logger.debug(e)
-			puts "\n[DP2] ERROR: #{e.message}\n\n"
+			CliWriter::err "#{e.message}\n\n"
 
 			puts to_s 
 		end
