@@ -12,10 +12,10 @@ class ClientCommand < IdBasedCommand
 			getId!(str_args)	
 			raise RuntimeError,"No CLIENTID was supplied" if @id==nil|| @id.empty?
 			client=AdminLink.new.client(@id)
-			CliWritter::ln client.to_s
+			CliWriter::ln client.to_s
 		rescue Exception => e
 			Ctxt.logger.debug(e)
-			CliWritter::err "#{e.message}\n\n"
+			CliWriter::err "#{e.message}\n\n"
 			puts help 
 		end
 	end

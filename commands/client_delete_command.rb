@@ -18,11 +18,11 @@ class ClientDeleteCommand < IdBasedCommand
 				str="Client #{@id} has been deleted\n" 
 				str+= "\n"
 			end
-			CliWritter::ln str
+			CliWriter::ln str
 		rescue Exception => e
 			 
 			Ctxt.logger.debug(e)
-			CliWritter::err " #{e}\n\n"
+			CliWriter::err " #{e}\n\n"
 		end
 	end
 	def help

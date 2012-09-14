@@ -16,11 +16,11 @@ class ClientCreateCommand < Command
 				raise RuntimeError," Client id, secret and role are mandatory"
 			end
 			client=AdminLink.new.createClient(@client)
-			CliWritter::ln "Client succesfully created\n#{client}\n"	
+			CliWriter::ln "Client succesfully created\n#{client}\n"	
 		rescue Exception => e
 			 
 			Ctxt.logger.debug(e)
-			CliWritter::err "#{e.message}\n\n"
+			CliWriter::err "#{e.message}\n\n"
 			puts help
 		end
 	end

@@ -52,7 +52,7 @@ class Cli
 		end
 
 		if hasErr
-			CliWritter::err( "#{error}\n\n") if error!=nil && !error.empty?
+			CliWriter::err( "#{error}\n\n") if error!=nil && !error.empty?
 			puts cmds["help"].help
 			return nil
 		end
@@ -80,7 +80,7 @@ class Cli
 
 end
 
-class CliWritter
+class CliWriter
 	def self.ln(str)
 		puts "[#{Ctxt.conf[Conf::SHORT_NAME]}] #{str}"		
 	end

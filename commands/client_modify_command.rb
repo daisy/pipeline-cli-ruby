@@ -20,11 +20,11 @@ class ClientModifyCommand < IdBasedCommand
 			orig=link.client(@id)
 			fill(orig)
 			client=link.modifyClient(@client)
-			CliWritter::ln "Client succesfully modified\n#{client}\n"	
+			CliWriter::ln "Client succesfully modified\n#{client}\n"	
 
 		rescue Exception => e
 			Ctxt.logger.debug(e)
-			CliWritter::err "#{e.message}\n\n"
+			CliWriter::err "#{e.message}\n\n"
 			puts help
 		end
 	end
