@@ -1,3 +1,10 @@
+version 1.5
+===========
+
+	* Administrative tasks through dp2admin 
+	* Output refactoring 
+	* Issues with short switches fixed
+	* Resource management refactored
 
 version 1.1
 ===========
