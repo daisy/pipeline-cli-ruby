@@ -4,7 +4,7 @@ class VersionCommand < Command
 	end
 
 	def execute(str_args)
-		puts "Daisy Pipeline 2"
+		puts "Pipeline 2 WS"
 		puts "Version: #{Ctxt.conf[Conf::WS_VERSION]}"
 		puts ""
 		puts Ctxt.conf[Conf::PROG_NAME]  
@@ -15,6 +15,6 @@ class VersionCommand < Command
 		return "#{@name}\t\t\t\tShows version and exits"	
 	end
 	def help
-		return "dp2 version \n\tPrints version and exists" 
+		return "#{Ctxt.conf[Conf::PROG_NAME]} version \n\tPrints version and exists" 
 	end
 end
