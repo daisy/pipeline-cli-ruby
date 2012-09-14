@@ -51,3 +51,17 @@ class ListResultProcessor < ResultProcessor
 		return objs 
 	end
 end
+
+class DeleteResultProcessor < ResultProcessor
+	def initialize(resName)
+		@resName=resName	
+	end
+	def process(bool)
+		return bool
+	end
+	def notFound(err,resource)
+		raise RuntimeError,"#{@resName} #{resource.params[:id]} not found"
+	end
+
+
+end
