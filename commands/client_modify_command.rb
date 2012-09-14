@@ -1,8 +1,8 @@
 require_rel "core/client"
-class ClientCreateCommand < Command
+class ClientModifyCommand < IdBasedCommand
 
 	def initialize
-		super("create")
+		super("modify")
 		@client=Client.new
 		build_parser
 	end
@@ -10,32 +10,47 @@ class ClientCreateCommand < Command
 
 			
 		begin
+			link=AdminLink.new
+			getId!(str_args)	
+			raise RuntimeError,"No CLIENTID was supplied" if @id==nil|| @id.empty?
 			@parser.parse(str_args)
+			@client.id=@id;
+
 			Ctxt.logger.debug("client #{@client.to_s}")
-			if @client.id.empty? || @client.secret.empty? || @client.role.empty?
-				raise RuntimeError," Client id, secret and role are mandatory"
-			end
-			client=AdminLink.new.createClient(@client)
-			CliWritter::ln "Client succesfully created\n#{client}\n"	
+			orig=link.client(@id)
+			fill(orig)
+			client=link.modifyClient(@client)
+			CliWritter::ln "Client succesfully modified\n#{client}\n"	
+
 		rescue Exception => e
-			 
 			Ctxt.logger.debug(e)
 			CliWritter::err "#{e.message}\n\n"
 			puts help
 		end
 	end
+	
+	def fill (other)
+		if @client.role.empty?
+			@client.role=other.role
+		end
+		if @client.secret.empty?
+			@client.secret=other.secret
+		end
+		if @client.contact.empty?
+			@client.contact=other.contact
+		end
+		
+	end
+
 	def help
 		return @parser.help
 	end
 	def to_s
-		return "#{@name}\t\t\t\tCreates a new client"	
+		return "#{@name}\t\t\t\tModifys the client info"	
 	end
 	def build_parser
 		roles=(Client::ROLES + Client::ROLES.map{|i| i.downcase})
 		@parser=OptionParser.new do |opts|
-			opts.on("-i CREATE","--id CLIENTID","Client id") do |v|
-				@client.id =v
-			end
 			opts.on("-r ROLE","--role ROLE ",Client::ROLES,roles,"Client role  (#{Client::ROLES.join(',')})") do |v|
 				@client.role=v.upcase
 			end
@@ -46,6 +61,6 @@ class ClientCreateCommand < Command
 				@client.secret=v
 			end
 		end
-		@parser.banner="dp2admin "+ @name + " [options] "
+		@parser.banner="#{Ctxt.conf[Conf::PROG_NAME]} "+ @name + " [options] CLIENTID"
 	end
 end

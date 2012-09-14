@@ -34,6 +34,7 @@ require_rel './commands/help_command.rb'
 require_rel './commands/client_command'
 require_rel './commands/client_list_command'
 require_rel './commands/client_create_command'
+require_rel './commands/client_modify_command'
 require_rel './commands/client_delete_command'
 require_rel './commands/halt_command'
 require_rel './commands/version_command'
@@ -46,6 +47,7 @@ def main
 	cli.addStaticCommand(ClientCommand.new)
 	cli.addStaticCommand(ClientListCommand.new)
 	cli.addStaticCommand(ClientCreateCommand.new)
+	cli.addStaticCommand(ClientModifyCommand.new)
 	cli.addStaticCommand(ClientDeleteCommand.new)
 
 	if Ctxt.conf[Ctxt.conf.class::LOCAL].to_s=="true"

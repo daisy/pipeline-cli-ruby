@@ -7,7 +7,7 @@ class ClientListResource < Resource
 		if id.empty? 
 			super("/admin/clients",{},ClientsResultProcessor.new)
 		else
-			super("/admin/clients",{:id=>id},ClientsResultProcessor.new)
+			super("/admin/clients",{:id=>id},ClientResultProcessor.new)
 
 		end
 	end	
@@ -28,9 +28,11 @@ class ClientsResultProcessor < ListResultProcessor
 		super("//ns:client",ClientBuilder.new)
 	end
 
-	def badRequest(err,resource)
-		Ctxt.logger.debug("WS 400: "+resource.buildUri)
-		raise RuntimeError,err.desc
+end
+class ClientResultProcessor < ClientsResultProcessor
+	def process (input)
+		list= super	
+		return list[0]
 	end
 end
 class DeleteClientResource < Resource

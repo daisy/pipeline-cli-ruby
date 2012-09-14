@@ -24,6 +24,10 @@ class Resource
 		@result=Rest.post_resource(buildUri(),contents,data)
 		return preProcess(@result)
 	end
+	def putResource(contents)
+		@result=Rest.put_resource(buildUri(),contents)
+		return preProcess(@result)
+	end
 	def deleteResource
 		@result=Rest.delete_resource(buildUri())
 		return preProcess(@result)

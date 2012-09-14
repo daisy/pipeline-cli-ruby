@@ -13,6 +13,9 @@ class AdminLink
 	def createClient(client)
 		return ClientListResource.new.postResource(ClientBuilder.new.toXml(client).to_s,nil)
 	end
+	def modifyClient(client)
+		return ClientListResource.new(client.id).putResource(ClientBuilder.new.toXml(client).to_s)
+	end
 	def deleteClient(id)
 		return DeleteClientResource.new(id).deleteResource
 	end
