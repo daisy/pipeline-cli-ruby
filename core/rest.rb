@@ -53,7 +53,7 @@ class Rest
 			authUri = URI.parse(Authentication.prepare_authenticated_uri(uri))
 			self.init_conn(authUri)
 			request = Net::HTTP::Post.new(authUri.request_uri)
-
+			Ctxt.logger.debug("Request data #{request_contents}")
 			# send the request as the body
 			if data == nil
 				request.body = request_contents
@@ -84,6 +84,30 @@ class Rest
 
 		end
 	end
+	def self.put_resource(uri,contents)
+		begin
+			authUri = URI.parse(Authentication.prepare_authenticated_uri(uri))
+			request = Net::HTTP::Put.new(authUri.request_uri)
+			self.init_conn(authUri)	
+			request.body =contents
+			Ctxt.logger.debug("Putting #{request.body}")	
+			response = @@conn.request(request)
+
+			Ctxt.logger.debug("Response was #{response}")
+			case response
+			when Net::HTTPSuccess
+				return response.body
+			else
+				Ctxt.logger.debug("error from WS: #{response.body}")
+				return RestError.new(response,response.body)
+			end
+		rescue
+			#puts "Error: DELETE #{uri.to_s} failed."
+			return false
+		end
+
+	end
+
 
 	def self.delete_resource(uri)
 		begin
@@ -112,7 +136,7 @@ class Rest
 		begin
 			return @@conn.post(url.request_uri, query, headers)
 		rescue => e
-			puts "[DP2] POST Failed #{e}... #{Time.now}"
+			CliWriter::ln "POST Failed #{e}... #{Time.now}"
 		end
 	end
 

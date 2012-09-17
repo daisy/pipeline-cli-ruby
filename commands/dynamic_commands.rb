@@ -1,10 +1,10 @@
-require_rel "./core/dp2"
+require_rel "./core/pipeline_link"
 require_rel "./core/helpers"
 class DynamicCommands
 
 	def self.get
 		commands=[]
-		scripts=Dp2.new.scripts
+		scripts=PipelineLink.new.scripts
 		scripts.values.each { |script| commands.push(CommandScript.new(script))}
 		return commands
 	end
@@ -24,18 +24,19 @@ class CommandScript < Command
 		@data=nil
 		@outfile=nil
 		@quiet=false
+		@source=nil
 		
 		build_modifiers
 		build_parser
 	end
 	def execute(str_args)
 		begin
-			dp2ws=Dp2.new
+			dp2ws=PipelineLink.new
 			@parser.parse(str_args)	
 			raise RuntimeError,"dp2 is running in remote mode, so you need to supply a zip file containing the data (--data)" if Ctxt.conf[Ctxt.conf.class::LOCAL]!=true && @data==nil
 			raise RuntimeError,"dp2 is running in remote mode, so you need to supply an output file to store the results (--file)" if Ctxt.conf[Ctxt.conf.class::LOCAL]!=true && @outfile==nil && !@background
 
-			puts "[DP2] IGNORING #{@outfile} as the job is set to be executed in the background"  if @outfile!=nil && @background
+			CliWriter::ln "IGNORING #{@outfile} as the job is set to be executed in the background"  if @outfile!=nil && @background
 
 			if @outfile!=nil && !@background
 				raise RuntimeError,"#{@outfile}: directory doesn't exists " if !File.exists?(File.dirname(File.expand_path(@outfile)))
@@ -45,20 +46,21 @@ class CommandScript < Command
 			Helpers.last_id_store(job)
 			if Ctxt.conf[Ctxt.conf.class::LOCAL]!=true && !@background &&job.status=="DONE"
 				dp2ws.job_zip_result(job.id,@outfile)
-				puts "[DP2] Result stored at #{@outfile}"
+				CliWriter::ln "Result stored at #{@outfile}"
 			end
 				
 			if !@persistent && job.status=="DONE"
 				if  dp2ws.delete_job(job.id)
-					puts "[DP2] The job #{job.id} has been deleted from the server"
+					CliWriter::ln " The job #{job.id} has been deleted from the server"
 				end
+
 			end
 			if !@background
-				puts "[DP2] #{job.status}"
+				CliWriter::ln "#{job.status}"
 			end
 		rescue Exception => e
 			Ctxt.logger.debug(e)
-			puts "\n[DP2] ERROR: #{e.message}\n\n"
+			CliWriter::err "#{e.message}\n\n"
 			puts help
 		end
 	end
@@ -129,7 +131,7 @@ class CommandScript < Command
 			end
 		end
 		
-		@parser.program_name="dp2 "+ @name
+		@parser.program_name="#{Ctxt.conf[Conf::PROG_NAME]} "+ @name
 	end
 
 	def build_modifiers
@@ -142,6 +144,7 @@ class CommandScript < Command
 			+"\t\t Type:#{opt[:type]}\n\n"
 			@opt_modifiers[modifier]=opt
 			
+			
 		}
 		@script.inputs.each {|input|
 			modifier="--i-#{input[:name]}"
@@ -149,6 +152,7 @@ class CommandScript < Command
 			+"\t\t Media type:#{input[:mediaType]}\n"\
 			+"\t\t Sequence allowed:#{input[:sequenceAllowed]}\n\n"
 			@input_modifiers[modifier]=input
+			@source==input if input[:name]=="source"
 		}
 		@script.outputs.each {|out|
 			modifier="--o-#{out[:name]}"

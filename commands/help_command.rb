@@ -53,17 +53,19 @@ class HelpCommand < Command
 
 	end
 	def help
-		s="Usage: dp2 command [options]\n\n"
-		s+="\nScript commands:\n\n"
-		@d_commands.each{|name,cmd| s+="#{cmd.to_s}\n"}
-		s+="\nGeneral commands:\n\n"
+		s="Usage: #{Ctxt.conf[Conf::PROG_NAME]} command [options]\n\n"
+		if !@d_commands.empty?
+			s+="\nScript commands:\n\n"
+			@d_commands.sort.each{|name,cmd| s+="#{cmd.to_s}\n"}
+			s+="\nGeneral commands:\n\n"
+		end
 		
-		@s_commands.each{|name,cmd| s+="#{cmd.to_s}\n" if name!="help" && name!="version"}
+		@s_commands.sort.each{|name,cmd| s+="#{cmd.to_s}\n" if name!="help" && name!="version"}
 
 		s+="#{self.to_s}\n"
 		s+="#{@version.to_s}\n"
-		s+="\nTo list the global options type:  \tdp2 help -g" 	
-		s+="\nTo get help for a command type:  \tdp2 help COMMAND"
+		s+="\nTo list the global options type:  \t#{Ctxt.conf[Conf::PROG_NAME]} help -g" 	
+		s+="\nTo get help for a command type:  \t#{Ctxt.conf[Conf::PROG_NAME]} help COMMAND"
 			
 		return s
 	end

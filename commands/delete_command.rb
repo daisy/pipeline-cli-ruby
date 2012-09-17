@@ -11,18 +11,19 @@ class DeleteCommand < IdBasedCommand
 			
 		begin
 			getId!(str_args)	
-			res=Dp2.new.delete_job(@id)
+			raise RuntimeError,"JOBID is mandatory" if @id.empty?
+			res=PipelineLink.new.delete_job(@id)
 			str="The job wasn't deleted"
 			if res 
 				str="Job #{@id} has been deleted\n" 
 				str+= "\n"
 			end
-			puts "[DP2] "+str
+			CliWriter::ln str
 		rescue Exception => e
 			 
 			Ctxt.logger.debug(e)
-			puts "\n[DP2] ERROR: #{e}\n\n"
-			puts to_s 
+			CliWriter::err "#{e}\n\n"
+			puts help 
 		end
 	end
 	def help
@@ -36,6 +37,6 @@ class DeleteCommand < IdBasedCommand
 		@parser=OptionParser.new do |opts|
 			addLastId(opts)
 		end
-		@parser.banner="dp2 "+ @name + " JOBID"
+		@parser.banner="#{Ctxt.conf[Conf::PROG_NAME]} "+ @name + " JOBID"
 	end
 end

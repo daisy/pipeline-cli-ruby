@@ -15,13 +15,14 @@ require 'time'
 require 'uri'
 require 'yaml'
 require "rexml/document"
+require_rel './core/cli'
 require_rel './commands/command'
 require_rel './commands/conf_parser'
 require_rel './core/alive'
 require_rel './core/authentication'
 require_rel './core/conf'
 require_rel './core/ctxt'
-require_rel './core/dp2'
+require_rel './core/pipeline_link'
 require_rel './core/helpers'
 require_rel './core/job'
 require_rel './core/multipart.rb'
@@ -40,78 +41,30 @@ require_rel './commands/halt_command'
 require_rel './commands/version_command'
 include REXML
 def main
-	if ARGV.empty?
-	
-		puts "Usage: dp2 command [options]\n"
-		puts "type dp2 help for more info\n"
-		exit -1	
-	end
-	if ENV["OCRA_EXECUTABLE"]==nil
-		Ctxt.conf(File.expand_path("config.yml",File.dirname(__FILE__)))
-	else
-		Ctxt.conf(File.expand_path("config.yml",File.dirname(ENV["OCRA_EXECUTABLE"])))
-	end
-	cnfParser= ConfParser.new
-	args=cnfParser.parse(ARGV)
-	Ctxt.logger.debug("args after conf parsing #{args}")
-	command=checkargs(args)
-	
+	version="1.5.0"	
+	cli=Cli.new(File.dirname('.'),"dp2","DP2",version)
+
 	begin
 		dynCommands=DynamicCommands.get
 	rescue Exception=>e
-		puts "[DP2] ERROR: #{e.message}"
+		CliWriter::err " #{e.message}"
 		exit -1
 	end
-	
-	s_cmds={}
-	d_cmds={}
-	#static commands
-	s_cmds=load(JobsCommand.new,s_cmds)
-	s_cmds=load(JobCommand.new,s_cmds)
-	s_cmds=load(DeleteCommand.new,s_cmds)
-	s_cmds=load(ResultCommand.new,s_cmds)
+	dynCommands.each{|cmd| cli.addDynamicCommand(cmd)}
+
+	cli.addStaticCommand(JobCommand.new)	
+	cli.addStaticCommand(JobsCommand.new)
+	cli.addStaticCommand(JobCommand.new)
+	cli.addStaticCommand(DeleteCommand.new)
+	cli.addStaticCommand(ResultCommand.new)
+
 	if Ctxt.conf[Ctxt.conf.class::LOCAL].to_s=="true"
-		s_cmds=load(HaltCommand.new,s_cmds)
+		cli.addStaticCommand(HaltCommand.new)
 	end
-	ver_cmd=VersionCommand.new
-	#scripts	
-	dynCommands.each{|cmd| d_cmds[cmd.name]=cmd}
-	s_cmds["help"]=HelpCommand.new(s_cmds,d_cmds,ver_cmd,cnfParser)
-	s_cmds[ver_cmd.name]=ver_cmd
-	error=""
-	hasErr=false
-	cmds={}
-	cmds=cmds.merge(s_cmds).merge(d_cmds)
-	if command!=nil && cmds.has_key?(command)
-		begin
-			Ctxt.logger.debug("command #{command}")
-			cmds[command].execute(args[1..-1])
-		rescue Exception=>e
-			error=e.message
-			hasErr=true	
-		end
-	else
-		hasErr=true
-	end
-
-	if hasErr
-		puts "\n[DP2] ERROR: #{error}\n\n" if error!=nil && !error.empty?
-		puts cmds["help"].help
-	end
+	#there we go!
+	return cli.main(ARGV)
 end
 
-def checkargs(args)
-  cmd=nil
-  args.each do |a|
-    cmd = a
-    break
-  end
-  return cmd
-end
-def load(cmd,cmds)
-	cmds[cmd.name]=cmd
-	return cmds
-end
 # execution starts here
 main 
 

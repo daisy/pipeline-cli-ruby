@@ -35,22 +35,23 @@ class ConfParser
 	def cleanSwitches(args)
 		clean=[]
 		args.each do |arg|
-			clean << arg.sub(/-(\w)/,'+\1')
+			clean << arg.sub(/^-(\w)/,'+\1')
 		end
 		return clean
 	end
 	def revertSwitches(args)
 		clean=[]
 		args.each do |arg|
-			clean << arg.sub(/\+(\w)/,'-\1')
+			clean << arg.sub(/^\+(\w)/,'-\1')
 		end
 		return clean
 	end
 	def build_parser
 		@parser=OptionParser.new do |opts|
-			Conf::CONFIG_ITEMS.each do |name,desc|
+			Conf::CONFIG_ITEMS.sort.each do |name,desc|
 				if Conf::CONST_FILTER.index(name)==nil 	
-					opts.on("","--#{name} VALUE",desc+" default("+Ctxt.conf[name].to_s+")") do |v|
+					opts.on("--#{name} VALUE",desc+" default: ("+Ctxt.conf[name].to_s+")") do |v|
+						Ctxt.logger.debug("Configuring#{name} with value #{v}") 
 						Ctxt.conf[name]=v	
 						Ctxt.conf.update_vals
 					end

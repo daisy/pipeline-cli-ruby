@@ -17,14 +17,21 @@ class Conf
 			 "authenticate"=>"If true will send the authenticated url's to the ws",
 			 "timeout_seconds"=>"Connection timeout",
 			 "debug"=>"If true debug messages are printed on the terminal",
-			 "version"=>" Daisy pipeline 2 version",
-			 "null"=> " "}
+			 "ws_version"=>" Daisy pipeline 2 version",
+			 "null"=> " ",
+			"prog_name"=>"" ,
+			"short_name"=>"" ,
+			"base_dir"=>"",
+			"version"=>""
+	
+	}
 
-	CONST_FILTER=["authenticate","version","null","exec_line_nix","exec_line_win","base_uri"]
+			#Not configurable from args or file
+
+	CONST_FILTER=["authenticate","version","null","exec_line_nix","exec_line_win","base_uri","prog_name","short_name","base_dir","ws_version"]
 
 	def initialize(file)
 		__init_constants__
-		
 		@map=YAML.load_file file
 		Ctxt.logger.debug(@map)
 		#HACK: the null redirects avoids win to get stuck creating the 

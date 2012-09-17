@@ -3,9 +3,8 @@ require_rel './core/scripts'
 require_rel './core/alive'
 require_rel './core/job'
 require_rel './core/halt'
-require "open3"
 #TODO asking if the service is alive before every call may not be a good idea, store that it's alive once and asume it in next calls
-class Dp2
+class PipelineLink
 	def initialize
 		Ctxt.logger.debug("initialising dp2 link")
 		if ENV["OCRA_EXECUTABLE"]==nil
@@ -32,18 +31,17 @@ class Dp2
 				end
 
 				Ctxt.logger().debug("waiting for the ws to come up...")
-				puts "[DP2] Waiting for the WS to come up"
+				CliWriter::ln "Waiting for the WS to come up"
 				al=wait_till_up
 				Ctxt.logger().debug("ws up!")
-				puts("[DP2] The daisy pipeline 2 WS is up!")
-				
+				CliWriter::ln("The daisy pipeline 2 WS is up!")
 			else
 				raise RuntimeError,"Unable to reach the WS"
 			end
-		end
+		end	
 		Ctxt.conf[Conf::AUTHENTICATE]=al.authentication
-		Ctxt.conf[Conf::VERSION]=al.version
-		Ctxt.logger.debug("version #{Ctxt.conf[Conf::VERSION]}")
+		Ctxt.conf[Conf::WS_VERSION]=al.version
+		Ctxt.logger.debug("version #{Ctxt.conf[Conf::WS_VERSION]}")
 		return true
 	end
 
@@ -72,7 +70,7 @@ class Dp2
 					map[script.nicename]=script
 				rescue Exception=>e
 					Ctxt.logger.debug(e.message)
-					puts "[DP2] (Ignoring #{key})"
+					CliWriter::ln "(Ignoring #{key})"
 				end
 			}
 			return map
@@ -86,12 +84,13 @@ class Dp2
 		msgIdx=0
 		#if alive
 			job=JobResource.new.postResource(script.to_xml_request,data)
+			CliWriter::ln "Job with id #{job.id} submitted to the server"
 			if wait==true
 				begin
 					sleep 1.5 
 					job=job_status(job.id,msgIdx)
 					if not quiet
-						job.messages.each{|msg| puts "[WS] "+ msg.to_s} 
+						job.messages.each{|msg| CliWriter::ws msg.to_s} 
 					end
 					if job.messages.size > 0 
 						msgIdx=(Integer(job.messages[-1].seq)+1).to_s
@@ -112,7 +111,7 @@ class Dp2
 	end
 
 	def job_statuses
-		return JobsStatusResource.new.getResource
+		return JobStatusResource.new.getResource
 	end
 
 	def delete_job(id)

@@ -14,12 +14,12 @@ class ResultCommand < IdBasedCommand
 		begin
 			getId!(str_args)
 			raise RuntimeError,"no output file provided" if @output==nil
-			res=Dp2.new.job_zip_result(@id,@output)
-			puts "[DP2] Job #{@id} stored at #{res}\n"
+			res=PipelineLink.new.job_zip_result(@id,@output)
+			CliWriter::ln "Job #{@id} stored at #{res}\n"
 		rescue Exception => e
 			 
 			Ctxt.logger.debug(e)
-			puts "\n[DP2] ERROR: #{e}\n\n"
+			CliWriter::err "#{e}\n\n"
 			puts help
 		end
 	end
@@ -37,6 +37,6 @@ class ResultCommand < IdBasedCommand
 			end
 			addLastId(opts)
 		end
-		@parser.banner="dp2 "+ @name + " [options] JOBID"
+		@parser.banner="#{Ctxt.conf[Conf::PROG_NAME]} "+ @name + " [options] JOBID"
 	end
 end
