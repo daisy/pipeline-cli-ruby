@@ -1,0 +1,61 @@
+#!/usr/bin/env ruby
+#All the requires in the entire app so ocra will fecth everything
+def require_rel(path)
+	require File.expand_path(path, File.dirname(__FILE__))
+end
+require 'base64'
+require 'cgi'
+require 'digest'
+require 'logger'
+require 'net/http'
+require 'open3'
+require 'openssl'
+require 'optparse'
+require 'time'
+require 'uri'
+require 'yaml'
+require "rexml/document"
+require_rel './core/cli'
+require_rel './commands/command'
+require_rel './commands/conf_parser'
+require_rel './core/alive'
+require_rel './core/authentication'
+require_rel './core/conf'
+require_rel './core/ctxt'
+require_rel './core/pipeline_link'
+require_rel './core/helpers'
+require_rel './core/multipart'
+require_rel './core/resource'
+require_rel './core/client'
+require_rel './core/rest'
+require_rel './core/result_processor'
+require_rel './core/halt'
+require_rel './commands/help_command.rb'
+require_rel './commands/client_command'
+require_rel './commands/client_list_command'
+require_rel './commands/client_create_command'
+require_rel './commands/client_modify_command'
+require_rel './commands/client_delete_command'
+require_rel './commands/halt_command'
+require_rel './commands/version_command'
+include REXML
+def main
+	#
+	version="1.5.0"	
+	cli=Cli.new(File.dirname('.'),"dp2admin","DP2A",version)
+
+	cli.addStaticCommand(ClientCommand.new)
+	cli.addStaticCommand(ClientListCommand.new)
+	cli.addStaticCommand(ClientCreateCommand.new)
+	cli.addStaticCommand(ClientModifyCommand.new)
+	cli.addStaticCommand(ClientDeleteCommand.new)
+
+	if Ctxt.conf[Ctxt.conf.class::LOCAL].to_s=="true"
+		cli.addStaticCommand(HaltCommand.new)
+	end
+	cli.main(ARGV)
+end
+
+# execution starts here
+main 
+
