@@ -131,7 +131,7 @@ class CommandScript < Command
 			end
 		end
 		
-		@parser.program_name="dp2 "+ @name
+		@parser.program_name="#{Ctxt.conf[Conf::PROG_NAME]} "+ @name
 	end
 
 	def build_modifiers

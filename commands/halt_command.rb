@@ -28,7 +28,7 @@ class HaltCommand < Command
 	end
 	def build_parser
 		@parser=OptionParser.new 
-		@parser.banner="Usage: dp2 "+ @name
+		@parser.banner="#{Ctxt.conf[Conf::PROG_NAME]} "+ @name 
 	end
 
 	def get_key

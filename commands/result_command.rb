@@ -37,6 +37,6 @@ class ResultCommand < IdBasedCommand
 			end
 			addLastId(opts)
 		end
-		@parser.banner="dp2 "+ @name + " [options] JOBID"
+		@parser.banner="#{Ctxt.conf[Conf::PROG_NAME]} "+ @name + " [options] JOBID"
 	end
 end

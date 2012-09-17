@@ -37,6 +37,6 @@ class DeleteCommand < IdBasedCommand
 		@parser=OptionParser.new do |opts|
 			addLastId(opts)
 		end
-		@parser.banner="dp2 "+ @name + " JOBID"
+		@parser.banner="#{Ctxt.conf[Conf::PROG_NAME]} "+ @name + " JOBID"
 	end
 end

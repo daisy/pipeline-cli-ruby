@@ -15,6 +15,6 @@ class VersionCommand < Command
 		return "#{@name}\t\t\t\tShows version and exits"	
 	end
 	def help
-		return "#{Ctxt.conf[Conf::PROG_NAME]} version \n\tPrints version and exists" 
+		return "#{Ctxt.conf[Conf::PROG_NAME]} version \n\tPrints version and exits" 
 	end
 end

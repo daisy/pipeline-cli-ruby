@@ -46,6 +46,6 @@ class ClientCreateCommand < Command
 				@client.secret=v
 			end
 		end
-		@parser.banner="dp2admin "+ @name + " [options] "
+		@parser.banner="#{Ctxt.conf[Conf::PROG_NAME]} "+ @name + " [options] "
 	end
 end
