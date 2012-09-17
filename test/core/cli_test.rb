@@ -19,7 +19,7 @@ class TestCli< Test::Unit::TestCase
 		assert_equal nil,cmd
 	end
 	def test_check_args
-		cmd=@cli.checkArgs([ "hola","-l"])
+		cmd,args=@cli.checkArgs([ "hola","-l"])
 		assert_equal "hola",cmd
 	end
 end
