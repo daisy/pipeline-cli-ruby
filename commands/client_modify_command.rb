@@ -46,7 +46,7 @@ class ClientModifyCommand < IdBasedCommand
 		return @parser.help
 	end
 	def to_s
-		return "#{@name}\t\t\t\tModifys the client info"	
+		return "#{@name}\t\t\t\tModifies the client info"	
 	end
 	def build_parser
 		roles=(Client::ROLES + Client::ROLES.map{|i| i.downcase})
