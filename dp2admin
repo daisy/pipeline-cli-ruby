@@ -42,7 +42,7 @@ include REXML
 def main
 	#
 	version="1.5.0"	
-	cli=Cli.new(File.dirname('.'),"dp2admin","DP2A",version)
+	cli=Cli.new(File.dirname(__FILE__),"dp2admin","DP2A",version)
 
 	cli.addStaticCommand(ClientCommand.new)
 	cli.addStaticCommand(ClientListCommand.new)
