@@ -1,3 +1,8 @@
+version 1.5.1
+=============
+
+	* Bug fix regarding the configuration file location
+
 version 1.5
 ===========
 
