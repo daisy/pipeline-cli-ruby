@@ -93,7 +93,7 @@ class PipelineLink
 						job.messages.each{|msg| CliWriter::ws msg.to_s} 
 					end
 					if job.messages.size > 0 
-						msgIdx=(Integer(job.messages[-1].seq)+1).to_s
+						msgIdx=(Integer(job.messages[-1].seq)).to_s
 					end
 					Ctxt.logger.debug("msg idx #{msgIdx}")	
 				end while job.status=='RUNNING' 
