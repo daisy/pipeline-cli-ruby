@@ -42,13 +42,19 @@ require_rel './commands/version_command'
 include REXML
 def main
 	version="1.5.0"	
-	cli=Cli.new(File.dirname(__FILE__),"dp2","DP2",version)
+	baseDir=""
+	if ENV["OCRA_EXECUTABLE"]==nil
+		baseDir=File.dirname(__FILE__)
+	else
+		baseDir=File.dirname(ENV["OCRA_EXECUTABLE"])
+	end
+	cli=Cli.new(baseDir,"dp2","DP2",version)
 
 	begin
 		dynCommands=DynamicCommands.get
 	rescue Exception=>e
 		CliWriter::err " #{e.message}"
-		exit -1
+		exit (-1)
 	end
 	dynCommands.each{|cmd| cli.addDynamicCommand(cmd)}
 

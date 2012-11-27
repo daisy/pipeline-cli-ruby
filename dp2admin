@@ -42,7 +42,12 @@ include REXML
 def main
 	#
 	version="1.5.0"	
-	cli=Cli.new(File.dirname(__FILE__),"dp2admin","DP2A",version)
+	if ENV["OCRA_EXECUTABLE"]==nil
+		baseDir=File.dirname(__FILE__)
+	else
+		baseDir=File.dirname(ENV["OCRA_EXECUTABLE"])
+	end
+	cli=Cli.new(baseDir,"dp2admin","DP2A",version)
 
 	cli.addStaticCommand(ClientCommand.new)
 	cli.addStaticCommand(ClientListCommand.new)
