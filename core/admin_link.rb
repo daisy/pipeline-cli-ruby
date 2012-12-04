@@ -20,5 +20,8 @@ class AdminLink
 		return DeleteClientResource.new(id).deleteResource
 	end
 
+	def properties()
+		return PropertiesResource.new.getResource
+	end
 
 end

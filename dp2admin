@@ -27,11 +27,13 @@ require_rel './core/helpers'
 require_rel './core/multipart'
 require_rel './core/resource'
 require_rel './core/client'
+require_rel './core/properties'
 require_rel './core/rest'
 require_rel './core/result_processor'
 require_rel './core/halt'
 require_rel './commands/help_command.rb'
 require_rel './commands/client_command'
+require_rel './commands/properties_command'
 require_rel './commands/client_list_command'
 require_rel './commands/client_create_command'
 require_rel './commands/client_modify_command'
@@ -54,6 +56,7 @@ def main
 	cli.addStaticCommand(ClientCreateCommand.new)
 	cli.addStaticCommand(ClientModifyCommand.new)
 	cli.addStaticCommand(ClientDeleteCommand.new)
+	cli.addStaticCommand(PropertiesCommand.new)
 
 	if Ctxt.conf[Ctxt.conf.class::LOCAL].to_s=="true"
 		cli.addStaticCommand(HaltCommand.new)
