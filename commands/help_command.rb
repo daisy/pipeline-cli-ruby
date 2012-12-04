@@ -29,8 +29,7 @@ class HelpCommand < Command
 	end
 	def execute(str_args)
 		cmd=@parser.permute! str_args	
-		cmd=cmd.to_s
-			
+
 		if cmd=="pipeliners"
 			showpipeliners!	
 		elsif  cmd=="COMMAND"
