@@ -42,6 +42,7 @@ class HelpCommand < Command
 			end
 				
 		else
+			cmd=cmd[0]
 			if @commands.has_key?(cmd)
 				puts @commands[cmd].help 
 			else
