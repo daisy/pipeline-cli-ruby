@@ -17,7 +17,7 @@ class Resource
     			uri = "#{Ctxt.conf[Ctxt.conf.class::BASE_URI]}#{@path}"
 		end
 		#other args
-		Ctxt.logger.debug("URI"+uri)
+		Ctxt.logger.debug("URI "+uri)
 		uri
 	end	
 	def getResource

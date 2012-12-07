@@ -7,7 +7,7 @@ class ClientListResource < Resource
 		if id.empty? 
 			super("/admin/clients",{},ClientsResultProcessor.new)
 		else
-			super("/admin/clients",{:id=>id},ClientResultProcessor.new)
+			super("/admin/clients",{:id=>id[0]},ClientResultProcessor.new)
 
 		end
 	end	
