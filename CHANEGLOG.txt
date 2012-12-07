@@ -1,3 +1,9 @@
+
+version 1.5.2
+=============
+
+	* Adapting the code for ruby 1.9
+
 version 1.5.1
 =============
 
