@@ -1,7 +1,7 @@
 require "test/unit"
-require "test/require_rel"
-require "core/client"
-require "core/result_processor"
+require "./test/require_rel"
+require "./core/client"
+require "./core/result_processor"
 require "rexml/document"
 require "rexml/xpath"
 include REXML

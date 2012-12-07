@@ -1,9 +1,9 @@
 require "test/unit"
-require "test/require_rel"
-require "core/resource"
+require "./test/require_rel"
+require "./core/resource"
+require "./core/result_processor"
 require "rexml/document"
 include REXML
-require "core/result_processor"
 
 class Thing
 	attr_accessor :stuff

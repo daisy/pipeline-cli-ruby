@@ -1,9 +1,9 @@
-require "test/unit"
-require "test/require_rel"
-require "core/cli"
-require "core/conf"
-require "core/ctxt"
-class TestCli< Test::Unit::TestCase
+require "minitest/unit"
+require "./test/require_rel"
+require "./core/cli"
+require "./core/conf"
+require "./core/ctxt"
+class TestCli< MiniTest::Unit::TestCase
 	def setup
 		@cli=Cli.new(File.dirname('.'),"dp2 test","DP2T","0.0.0")	
 	end

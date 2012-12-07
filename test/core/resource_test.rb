@@ -1,8 +1,8 @@
 require "test/unit"
-require "test/require_rel"
-require "core/resource"
-require "core/cli"
-require "core/ctxt"
+require "./test/require_rel"
+require "./core/resource"
+require "./core/cli"
+require "./core/ctxt"
 class TestResource < Test::Unit::TestCase
 	def setup
 		#init ctxt
@@ -18,6 +18,5 @@ class TestResource < Test::Unit::TestCase
 		Ctxt.conf[Conf::BASE_URI]="localhost/"
 		wid=Resource.new("thing",{:id=>"me"},nil)	
 		assert_equal "localhost/thing/me",wid.buildUri
-
 	end
 end
