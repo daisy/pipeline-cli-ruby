@@ -26,17 +26,28 @@ module Helpers
 		return URI.escape(uri)
 	end
 	def last_id_store(job)
-		path=File.dirname(__FILE__)+"/../.lastid"
+		if ENV["OCRA_EXECUTABLE"]==nil
+			path=File.dirname(__FILE__)+"/../.lastid"
+		else
+			path=File.dirname(ENV["OCRA_EXECUTABLE"])+"\\.lastid"
+		end
+		Ctxt.logger.debug("writing id to #{path}")
 		File.open(path, 'w') {|f| f.write(job.id) }
 	end
 	def last_id_read
+		if ENV["OCRA_EXECUTABLE"]==nil
+			path=File.dirname(__FILE__)+"/../.lastid"
+		else
+			path=File.dirname(ENV["OCRA_EXECUTABLE"])+"\\.lastid"
+		end
 		
-		path=File.dirname(__FILE__)+"/../.lastid"
-		id=nil
+		id=""
 		if File.exists?(path)
 			f=File.open(path, 'r') 
 			id=f.gets() 
 			f.close
+		else
+			Ctxt.logger.warn("path not found #{path}")
 		end
 		return id
 	end
