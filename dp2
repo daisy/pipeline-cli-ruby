@@ -62,10 +62,11 @@ def main
 	cli.addStaticCommand(JobsCommand.new)
 	cli.addStaticCommand(JobCommand.new)
 	cli.addStaticCommand(DeleteCommand.new)
-	cli.addStaticCommand(ResultCommand.new)
 
 	if Ctxt.conf[Ctxt.conf.class::LOCAL].to_s=="true"
 		cli.addStaticCommand(HaltCommand.new)
+	else
+		cli.addStaticCommand(ResultCommand.new)
 	end
 	#there we go!
 	return cli.main(ARGV)
