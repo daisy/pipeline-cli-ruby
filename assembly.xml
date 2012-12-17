@@ -17,6 +17,8 @@
       <includes>
         <include>dp2</include>
         <include>dp2.exe</include>
+        <include>dp2admin</include>
+        <include>dp2admin.exe</include>
       </includes>
       <outputDirectory>/</outputDirectory>
       <fileMode>0755</fileMode>
