@@ -58,6 +58,10 @@ class ConfParser
 				end
 			end
 		end
+		#optparser issue: linux ruby seems to ignore @parser.version=nil to ignore the --version flag
+		@parser.version=": Use #{@parser.program_name} version to get full the version description"
+		
+
 		@parser.banner="Global CLI switches:"
 	end
 end
