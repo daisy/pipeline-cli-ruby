@@ -41,7 +41,7 @@ require_rel './commands/halt_command'
 require_rel './commands/version_command'
 include REXML
 def main
-	version="1.5.1"	
+	version="1.5.2"	
 	baseDir=""
 	if ENV["OCRA_EXECUTABLE"]==nil
 		baseDir=File.dirname(__FILE__)
