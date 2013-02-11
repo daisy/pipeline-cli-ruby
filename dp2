@@ -36,6 +36,7 @@ require_rel './commands/result_command'
 require_rel './commands/dynamic_commands'
 require_rel './commands/help_command.rb'
 require_rel './commands/job_command'
+require_rel './commands/log_command'
 require_rel './commands/jobs_command'
 require_rel './commands/halt_command'
 require_rel './commands/version_command'
@@ -62,6 +63,7 @@ def main
 	cli.addStaticCommand(JobsCommand.new)
 	cli.addStaticCommand(JobCommand.new)
 	cli.addStaticCommand(DeleteCommand.new)
+	cli.addStaticCommand(LogCommand.new)
 
 	if Ctxt.conf[Ctxt.conf.class::LOCAL].to_s=="true"
 		cli.addStaticCommand(HaltCommand.new)

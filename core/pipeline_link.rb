@@ -106,7 +106,7 @@ class PipelineLink
 		#if alive
 			return JobStatusResource.new(id,msgSeq).getResource
 		#end
-		return nil
+		#return nil
 
 	end
 
@@ -117,9 +117,15 @@ class PipelineLink
 	def delete_job(id)
 		return DeleteJobResource.new(id).deleteResource	
 	end	
+
 	def job_zip_result(id,outpath)
 		return JobResultZipResource.new(id,outpath).getResource	
 	end	
+	
+	def job_log(id,outpath)
+		return JobLogResource.new(id,outpath).getResource	
+	end	
+
 	def halt(key)
 		return HaltResource.new(key).getResource	
 	end	

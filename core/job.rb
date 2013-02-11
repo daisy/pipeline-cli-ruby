@@ -31,7 +31,7 @@ class DeleteJobResource < Resource
 end
 class JobResultZipResource < Resource
 	def initialize(id,output_path)
-		super("/jobs",{:id=>id},JobZipResultProcessor.new(output_path))
+		super("/jobs",{:id=>id},StoreToFileProcessor.new(output_path))
 	end	
 	def buildUri
     		uri = "#{super}/result"
@@ -41,7 +41,19 @@ class JobResultZipResource < Resource
 end
 
 
-class JobZipResultProcessor < ResultProcessor
+class JobLogResource < Resource
+	def initialize(id,output_path)
+		super("/jobs",{:id=>id},StoreToFileProcessor.new(output_path))
+	end	
+	def buildUri
+    		uri = "#{super}/log"
+		Ctxt.logger.debug("URI:"+uri)
+		uri
+	end
+end
+
+
+class StoreToFileProcessor < ResultProcessor
 	def initialize(path)
 		@path=path	
 	end
@@ -55,6 +67,9 @@ class JobZipResultProcessor < ResultProcessor
 		raise RuntimeError,"Job #{resource.params[:id]} not found"
 	end
 end
+
+
+
 
 class JobsStatusResultProcessor < ListResultProcessor
 	def initialize
