@@ -17,7 +17,7 @@ class JobCommand < IdBasedCommand
 			if job != nil 
 				str="Job Id:#{job.id}\n" 
 				str+="\t Status: #{job.status}\n" 
-				str+="\t Script: #{job.script.uri}\n"
+				#str+="\t Script: #{job.script.uri}\n"
 				if @showMsgs 
 					job.messages.each{|msg| str+=msg.to_s+"\n"}
 				end
