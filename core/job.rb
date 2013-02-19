@@ -91,7 +91,7 @@ class Message
 end
 class Job
 
-	attr_accessor :id,:status,:script,:result,:messages,:log
+	attr_accessor :id,:status,:script,:result,:messages,:log,:nicename
 	def initialize(id)	
 		@id=id
 		@messages=[]
@@ -100,6 +100,7 @@ class Job
 	def to_s
 		s="Job Id: #{@id}\n"
 		s+="\t Status: #{@status}\n"
+		s+="\t Name: #{@nicename}\n"
 		s+="\t Script: #{@script.uri}\n" if @script!=nil
 		s+="\t Result: #{@result}\n" if @result!=nil
 		s+="\t Log: #{@log}\n" if @log!=nil
@@ -116,6 +117,7 @@ class JobBuilder
 		job.status=element.attributes["status"]
 	
 		xscript=XPath.first(element,"./ns:script",Resource::NS)
+		xnicename=XPath.first(element,"./ns:nicename",Resource::NS)
 		xresult=XPath.first(element,"./ns:result",Resource::NS)
 		xlog=XPath.first(element,"./ns:log",Resource::NS)
 		XPath.each(element,"./ns:messages/ns:message",Resource::NS){|xmsg|
@@ -129,6 +131,7 @@ class JobBuilder
 		job.script=Script.fromXmlElement(xscript) if xscript!=nil
 		job.result=xresult.attributes["href"] if xresult!=nil
 		job.log=xlog.attributes["href"] if xlog!=nil
+		job.nicename=xnicename.text if xnicename!=nil
 	
 		return job
 	end
