@@ -25,6 +25,7 @@ class CommandScript < Command
 		@outfile=nil
 		@quiet=false
 		@source=nil
+		@niceName=nil
 		
 		build_modifiers
 		build_parser
@@ -41,7 +42,7 @@ class CommandScript < Command
 			if @outfile!=nil && !@background
 				raise RuntimeError,"#{@outfile}: directory doesn't exists " if !File.exists?(File.dirname(File.expand_path(@outfile)))
 			end	
-			job=dp2ws.job(@script,@data,!@background,@quiet)
+			job=dp2ws.job(@script,@niceName,@data,!@background,@quiet)
 			#store the id of the current job
 			Helpers.last_id_store(job)
 			if Ctxt.conf[Ctxt.conf.class::LOCAL]!=true && !@background &&job.status=="DONE"
@@ -118,6 +119,9 @@ class CommandScript < Command
 				opts.on("--data ZIP_FILE","-d ZIP_FILE","Zip file with the data needed to perform the job (Keep in mind that options and inputs MUST be relative uris to the zip file's root)") do |v|
 					@data=File.open(File.expand_path(v), "rb")
 				end
+			end
+			opts.on("-n","--name [NAME]","Job's nice name" )do |v|
+				@niceName=v
 			end
 			opts.on("--background","-b","Runs the job in the background (will be persistent)") do |v|
 				@background=true

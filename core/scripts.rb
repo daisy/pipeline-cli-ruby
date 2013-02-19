@@ -101,9 +101,10 @@ class Script
 			return script	
 	end
 
-	def to_xml_request
+	def to_xml_request(jobName)
 	
 #		<jobRequest xmlns='http://www.daisy.org/ns/pipeline/data'>
+#	            <nicename>Jobs nice name</nicename>
 #		    <script href='http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.xpl'/>
 #		    <input name='source'>
 #			<file src='./dtbook-basic.xml'/>
@@ -112,7 +113,7 @@ class Script
 #		    <option name='opt-css-filename'>the-css-file.css</option>
 #		    <option name='opt-zedai-filename'>the-zedai-file.xml</option>
 #		</jobRequest>
-		doc=XmlBuilder.new(self).xml
+		doc=XmlBuilder.new(self,jobName).xml
 		return doc.to_s 
 		
 	end
@@ -167,6 +168,7 @@ end
 class XmlBuilder
 	NS='http://www.daisy.org/ns/pipeline/data'
 	E_JOB_REQUEST='jobRequest'
+	E_JOB_NAME='nicename'
 	E_SCRIPT='script'
 	E_INPUT='input'
 	E_ITEM='item'
@@ -177,8 +179,9 @@ class XmlBuilder
 	A_VALUE='value'
 
 		
-	def initialize(script)
+	def initialize(script,jobName)
 		@script=script
+		@jobName=jobName
 	end
 	def xml
 		@doc= Document.new
@@ -186,6 +189,11 @@ class XmlBuilder
 		jobReqElem.add_namespace(NS);
 		jobReqElem.add_element E_SCRIPT,{A_HREF=>@script.href}
 		@doc << jobReqElem
+		if @jobName !=nil
+			nameElem = Element.new E_JOB_NAME 
+			nameElem.text=@jobName
+			jobReqElem << nameElem
+		end
 		addInputs
 		addOutputs
 		addOptions

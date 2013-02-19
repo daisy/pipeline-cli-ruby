@@ -16,6 +16,8 @@ class JobCommand < IdBasedCommand
 			str="No such job"
 			if job != nil 
 				str="Job Id:#{job.id}\n" 
+				
+				str+="\t Name: #{job.nicename}\n" if job.nicename!=nil
 				str+="\t Status: #{job.status}\n" 
 				str+="\t Script: #{job.script.id}\n"
 				if @showMsgs 
