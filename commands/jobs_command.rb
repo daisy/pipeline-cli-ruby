@@ -12,6 +12,7 @@ class JobsCommand < Command
 			jobs=PipelineLink.new.job_statuses
 			jobs.each { |job|
 				str="Job Id:#{job.id}\n" 
+				str+="\t Name: #{job.nicename}\n" if job.nicename!=nil
 				str+="\t Status: #{job.status}\n" 
 				CliWriter::ln str
 			}
