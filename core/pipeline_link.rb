@@ -118,7 +118,7 @@ class PipelineLink
 		return DeleteJobResource.new(id).deleteResource	
 	end	
 
-	def job_zip_result(id,outpath,type,name,idx)
+	def job_zip_result(id,outpath,type=nil,name=nil,idx=nil)
 		return JobResultZipResource.new(id,outpath,type,name,idx).getResource	
 	end	
 	
