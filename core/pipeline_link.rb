@@ -118,8 +118,8 @@ class PipelineLink
 		return DeleteJobResource.new(id).deleteResource	
 	end	
 
-	def job_zip_result(id,outpath)
-		return JobResultZipResource.new(id,outpath).getResource	
+	def job_zip_result(id,outpath,type,name,idx)
+		return JobResultZipResource.new(id,outpath,type,name,idx).getResource	
 	end	
 	
 	def job_log(id,outpath)
