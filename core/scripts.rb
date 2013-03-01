@@ -63,6 +63,7 @@ class Script
 	end
 
 	def self.fromXmlElement(node)
+			
 			script=Script.new(node.attributes["href"],XPath.first(node,"./ns:nicename",Resource::NS).text,XPath.first(node,"./ns:description",Resource::NS).text,node.attributes["id"],node.attributes["script"])
 			#options	
 			XPath.each(node,"./ns:option",Resource::NS){|option|

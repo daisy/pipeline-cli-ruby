@@ -156,10 +156,13 @@ class CommandScript < Command
 			+"\t\t Media type:#{input[:mediaType]}\n"\
 			+"\t\t Sequence allowed:#{input[:sequenceAllowed]}\n\n"
 			@input_modifiers[modifier]=input
-			@source==input if input[:name]=="source"
+			#@source==input if input[:name]=="source"
 		}
 		@script.outputs.each {|out|
 			modifier="--o-#{out[:name]}"
+			out[:help] ="\n\t\t Desc:#{out[:desc]}\n"\
+			+"\t\t Media type:#{out[:mediaType]}\n"\
+			+"\t\t Sequence allowed:#{out[:sequenceAllowed]}\n\n"
 			@output_modifiers[modifier]=out
 		}
 	end
