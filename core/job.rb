@@ -145,7 +145,7 @@ class  Results
 		}
 		return st
 	end
-	def fromXml(element)
+	def self.fromXml(element)
 		res=Results.new
 		res.href=element.attributes["href"]
 		XPath.each(element,"./ns:result",Resource::NS){|resElm|
@@ -191,7 +191,7 @@ class JobBuilder
 		}
 		
 		job.script=Script.fromXmlElement(xscript) if xscript!=nil
-		job.results=Results.new.fromXml(xresult) if xresult!=nil;
+		job.results=Results.fromXml(xresult) if xresult!=nil;
 		job.log=xlog.attributes["href"] if xlog!=nil
 		job.nicename=xnicename.text if xnicename!=nil
 	
