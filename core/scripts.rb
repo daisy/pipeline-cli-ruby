@@ -83,7 +83,7 @@ class Script
 				out={:name=>output.attributes["name"],
 					:desc=>output.attributes["desc"],
 					:mediaType=>output.attributes["mediaType"],
-					:sequenceAllowed=>output.attributes["sequenceAllowed"],
+					:sequenceAllowed=>output.attributes["sequence"],
 				}
 				script.outputs.push(out)
 		
@@ -93,7 +93,7 @@ class Script
 				inp={:name=>input.attributes["name"],
 					:desc=>input.attributes["desc"],
 					:mediaType=>input.attributes["mediaType"],
-					:sequenceAllowed=>input.attributes["sequenceAllowed"],
+					:sequenceAllowed=>input.attributes["sequence"],
 				}
 				script.inputs.push(inp)
 		
@@ -172,6 +172,7 @@ class XmlBuilder
 	E_JOB_NAME='nicename'
 	E_SCRIPT='script'
 	E_INPUT='input'
+	E_OUTPUT='output'
 	E_ITEM='item'
 	E_OPTION='option'
 	A_HREF='href'
@@ -198,6 +199,11 @@ class XmlBuilder
 		addInputs
 		addOutputs
 		addOptions
+		#cal=Element.new "callback"
+		#cal.attributes["href"]="http://localhost:7777/"
+		#cal.attributes["type"]="messages"
+		#cal.attributes["frequency"]=10
+		#jobReqElem<< cal
 		return @doc
 	end	
 
@@ -226,18 +232,14 @@ class XmlBuilder
 		}
 	end
 	def addOutputs
-		#TODO: not sure about how to hadle outputs... specially sequences, now relaying in the ws behaviour 
-#		@script.outputs.each{ |output|
-#			raise "Input empty: #{output[:name]}" if !(output[:value]!=nil && !output[:value].empty?)
-#			values=output[:value]
-#			if values.class != Array
-#				values=[output[:value]] 
-#			end
-#			in_elem=@doc.create_element(E_INPUT,{A_NAME=>output[:name]})
-#			
-#			@doc.root << in_elem
-#			values.each{|file| in_elem << @doc.create_element(E_ITEM,{A_VALUE=>file})} 
-#		}
+		@script.outputs.each{ |output|
+			raise "Outptut empty: #{output[:name]}" if !(output[:value]!=nil && !output[:value].empty?)
+			values=output[:value]
+			out_elem=Element.new E_OUTPUT
+			out_elem.attributes[A_NAME]=output[:name]
+			@doc.root << out_elem
+			values.each{|file| out_elem.add_element E_ITEM,{A_VALUE=>Helpers.path_to_uri(file,@script.local)}} 
+		}
 	end
 end
 
