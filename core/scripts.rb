@@ -63,6 +63,7 @@ class Script
 	end
 
 	def self.fromXmlElement(node)
+			
 			script=Script.new(node.attributes["href"],XPath.first(node,"./ns:nicename",Resource::NS).text,XPath.first(node,"./ns:description",Resource::NS).text,node.attributes["id"],node.attributes["script"])
 			#options	
 			XPath.each(node,"./ns:option",Resource::NS){|option|
@@ -82,7 +83,7 @@ class Script
 				out={:name=>output.attributes["name"],
 					:desc=>output.attributes["desc"],
 					:mediaType=>output.attributes["mediaType"],
-					:sequenceAllowed=>output.attributes["sequenceAllowed"],
+					:sequenceAllowed=>output.attributes["sequence"],
 				}
 				script.outputs.push(out)
 		
@@ -92,7 +93,7 @@ class Script
 				inp={:name=>input.attributes["name"],
 					:desc=>input.attributes["desc"],
 					:mediaType=>input.attributes["mediaType"],
-					:sequenceAllowed=>input.attributes["sequenceAllowed"],
+					:sequenceAllowed=>input.attributes["sequence"],
 				}
 				script.inputs.push(inp)
 		
@@ -101,9 +102,10 @@ class Script
 			return script	
 	end
 
-	def to_xml_request
+	def to_xml_request(jobName)
 	
 #		<jobRequest xmlns='http://www.daisy.org/ns/pipeline/data'>
+#	            <nicename>Jobs nice name</nicename>
 #		    <script href='http://www.daisy.org/pipeline/modules/dtbook-to-zedai/dtbook-to-zedai.xpl'/>
 #		    <input name='source'>
 #			<file src='./dtbook-basic.xml'/>
@@ -112,7 +114,7 @@ class Script
 #		    <option name='opt-css-filename'>the-css-file.css</option>
 #		    <option name='opt-zedai-filename'>the-zedai-file.xml</option>
 #		</jobRequest>
-		doc=XmlBuilder.new(self).xml
+		doc=XmlBuilder.new(self,jobName).xml
 		return doc.to_s 
 		
 	end
@@ -167,8 +169,10 @@ end
 class XmlBuilder
 	NS='http://www.daisy.org/ns/pipeline/data'
 	E_JOB_REQUEST='jobRequest'
+	E_JOB_NAME='nicename'
 	E_SCRIPT='script'
 	E_INPUT='input'
+	E_OUTPUT='output'
 	E_ITEM='item'
 	E_OPTION='option'
 	A_HREF='href'
@@ -177,8 +181,9 @@ class XmlBuilder
 	A_VALUE='value'
 
 		
-	def initialize(script)
+	def initialize(script,jobName)
 		@script=script
+		@jobName=jobName
 	end
 	def xml
 		@doc= Document.new
@@ -186,9 +191,19 @@ class XmlBuilder
 		jobReqElem.add_namespace(NS);
 		jobReqElem.add_element E_SCRIPT,{A_HREF=>@script.href}
 		@doc << jobReqElem
+		if @jobName !=nil
+			nameElem = Element.new E_JOB_NAME 
+			nameElem.text=@jobName
+			jobReqElem << nameElem
+		end
 		addInputs
 		addOutputs
 		addOptions
+		#cal=Element.new "callback"
+		#cal.attributes["href"]="http://localhost:7777/"
+		#cal.attributes["type"]="messages"
+		#cal.attributes["frequency"]=10
+		#jobReqElem<< cal
 		return @doc
 	end	
 
@@ -217,18 +232,14 @@ class XmlBuilder
 		}
 	end
 	def addOutputs
-		#TODO: not sure about how to hadle outputs... specially sequences, now relaying in the ws behaviour 
-#		@script.outputs.each{ |output|
-#			raise "Input empty: #{output[:name]}" if !(output[:value]!=nil && !output[:value].empty?)
-#			values=output[:value]
-#			if values.class != Array
-#				values=[output[:value]] 
-#			end
-#			in_elem=@doc.create_element(E_INPUT,{A_NAME=>output[:name]})
-#			
-#			@doc.root << in_elem
-#			values.each{|file| in_elem << @doc.create_element(E_ITEM,{A_VALUE=>file})} 
-#		}
+		@script.outputs.each{ |output|
+			raise "Outptut empty: #{output[:name]}" if !(output[:value]!=nil && !output[:value].empty?)
+			values=output[:value]
+			out_elem=Element.new E_OUTPUT
+			out_elem.attributes[A_NAME]=output[:name]
+			@doc.root << out_elem
+			values.each{|file| out_elem.add_element E_ITEM,{A_VALUE=>Helpers.path_to_uri(file,@script.local)}} 
+		}
 	end
 end
 

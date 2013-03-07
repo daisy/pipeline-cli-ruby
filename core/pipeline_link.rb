@@ -78,12 +78,12 @@ class PipelineLink
 		return nil
 	end
 
-	def job(script,data,wait,quiet)
+	def job(script,name,data,wait,quiet)
 		Ctxt.logger.debug("Quiet job:#{quiet}")
 		job=nil
 		msgIdx=0
 		#if alive
-			job=JobResource.new.postResource(script.to_xml_request,data)
+			job=JobResource.new.postResource(script.to_xml_request(name),data)
 			CliWriter::ln "Job with id #{job.id} submitted to the server"
 			if wait==true
 				begin
@@ -106,7 +106,7 @@ class PipelineLink
 		#if alive
 			return JobStatusResource.new(id,msgSeq).getResource
 		#end
-		return nil
+		#return nil
 
 	end
 
@@ -117,9 +117,15 @@ class PipelineLink
 	def delete_job(id)
 		return DeleteJobResource.new(id).deleteResource	
 	end	
-	def job_zip_result(id,outpath)
-		return JobResultZipResource.new(id,outpath).getResource	
+
+	def job_zip_result(id,outpath,type=nil,name=nil,idx=nil)
+		return JobResultZipResource.new(id,outpath,type,name,idx).getResource	
 	end	
+	
+	def job_log(id,outpath)
+		return JobLogResource.new(id,outpath).getResource	
+	end	
+
 	def halt(key)
 		return HaltResource.new(key).getResource	
 	end	

@@ -5,6 +5,7 @@ class JobCommand < IdBasedCommand
 	def initialize
 		super("status")
 		@showMsgs=false
+		@showRes=false
 		build_parser
 	end
 	def execute(str_args)
@@ -16,11 +17,13 @@ class JobCommand < IdBasedCommand
 			str="No such job"
 			if job != nil 
 				str="Job Id:#{job.id}\n" 
+				
+				str+="\t Name: #{job.nicename}\n" if job.nicename!=nil
 				str+="\t Status: #{job.status}\n" 
-				str+="\t Script: #{job.script.uri}\n"
-				if @showMsgs 
-					job.messages.each{|msg| str+=msg.to_s+"\n"}
-				end
+				str+="\t Script: #{job.script.id}\n"
+				job.messages.each{|msg| str+=msg.to_s+"\n"} if @showMsgs
+				str+=job.results.to_s if @showRes
+
 				str+= "\n"
 			end
 			CliWriter::ln str
@@ -43,6 +46,9 @@ class JobCommand < IdBasedCommand
 		@parser=OptionParser.new do |opts|
 			opts.on("-v","Shows the job's log messages") do |v|
 				@showMsgs=true
+			end
+			opts.on("-r","Shows the job's detailed result description") do |v|
+				@showRes=true
 			end
 			addLastId(opts)
 		end

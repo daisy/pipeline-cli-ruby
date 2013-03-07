@@ -25,6 +25,7 @@ class CommandScript < Command
 		@outfile=nil
 		@quiet=false
 		@source=nil
+		@niceName=nil
 		
 		build_modifiers
 		build_parser
@@ -41,7 +42,7 @@ class CommandScript < Command
 			if @outfile!=nil && !@background
 				raise RuntimeError,"#{@outfile}: directory doesn't exists " if !File.exists?(File.dirname(File.expand_path(@outfile)))
 			end	
-			job=dp2ws.job(@script,@data,!@background,@quiet)
+			job=dp2ws.job(@script,@niceName,@data,!@background,@quiet)
 			#store the id of the current job
 			Helpers.last_id_store(job)
 			if Ctxt.conf[Ctxt.conf.class::LOCAL]!=true && !@background &&job.status=="DONE"
@@ -94,12 +95,12 @@ class CommandScript < Command
 			@output_modifiers.keys.each{|output|
 				@output_modifiers[output][:value]=nil
 				if @output_modifiers[output][:sequenceAllowed]=='true'
-					opts.on(output+" output1,output2,output3",Array) do |v|
+					opts.on(output+" output1,output2,output3",Array,@output_modifiers[output][:help]) do |v|
 					   @output_modifiers[output][:value] = v
 					end
 				else
-					opts.on(output+" output") do |v|
-					   @output_modifiers[output][:value] = v
+					opts.on(output+" output",@output_modifiers[output][:help]) do |v|
+					   @output_modifiers[output][:value] = [v]
 					end
 				end
 
@@ -118,6 +119,9 @@ class CommandScript < Command
 				opts.on("--data ZIP_FILE","-d ZIP_FILE","Zip file with the data needed to perform the job (Keep in mind that options and inputs MUST be relative uris to the zip file's root)") do |v|
 					@data=File.open(File.expand_path(v), "rb")
 				end
+			end
+			opts.on("-n","--name [NAME]","Job's nice name" )do |v|
+				@niceName=v
 			end
 			opts.on("--background","-b","Runs the job in the background (will be persistent)") do |v|
 				@background=true
@@ -152,10 +156,14 @@ class CommandScript < Command
 			+"\t\t Media type:#{input[:mediaType]}\n"\
 			+"\t\t Sequence allowed:#{input[:sequenceAllowed]}\n\n"
 			@input_modifiers[modifier]=input
-			@source==input if input[:name]=="source"
+			#@source==input if input[:name]=="source"
 		}
 		@script.outputs.each {|out|
 			modifier="--o-#{out[:name]}"
+		
+			out[:help] ="\n\t\t Desc:#{out[:desc]}\n"\
+			+"\t\t Media type:#{out[:mediaType]}\n"\
+			+"\t\t Sequence allowed:#{out[:sequenceAllowed]}\n\n"
 			@output_modifiers[modifier]=out
 		}
 	end
