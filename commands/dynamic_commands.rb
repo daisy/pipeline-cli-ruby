@@ -108,7 +108,7 @@ class CommandScript < Command
 
 			@opt_modifiers.keys.each{|option|
 				@opt_modifiers[option][:value]=nil
-				opts.on(option+" [option_value]",@opt_modifiers[option][:help]) do |v|
+				opts.on(option+ @opt_modifiers[option][:tail],@opt_modifiers[option][:help]) do |v|
 				    @opt_modifiers[option][:value] = v
 				end
 			}
@@ -139,31 +139,37 @@ class CommandScript < Command
 	end
 
 	def build_modifiers
-		
+		@script.opts=@script.opts.sort_by{ | v | v[:required] }.reverse	
 		@script.opts.each {|opt|
-			modifier="--x-#{opt[:name]}"
-			opt[:help]="\n\t\t Desc:#{opt[:desc]}\n"\
-			+"\t\t Media type:#{opt[:mediaType]}\n"\
-			+"\t\t Required:#{opt[:required]}\n"\
-			+"\t\t Type:#{opt[:type]}\n\n"
+			modifier="--x-#{opt[:name]} "
+			if opt[:required]=="true"
+				opt[:tail]= " #{opt[:type]}"
+			else
+				opt[:tail]= " [#{opt[:type]}]"
+			end
+			opt[:help]= ""
+			if opt[:required]=="true" 
+				opt[:help]+= " (required)" 
+			else
+				opt[:help]+= " (optional)" 
+			end
+			opt[:help]+= " #{opt[:desc]}\n"
+			opt[:help]+= " (#{opt[:mediaType]})" if opt[:mediaType]!=nil and !opt[:mediaType].empty?
 			@opt_modifiers[modifier]=opt
 			
 			
 		}
 		@script.inputs.each {|input|
 			modifier="--i-#{input[:name]}"
-			input[:help] ="\n\t\t Desc:#{input[:desc]}\n"\
-			+"\t\t Media type:#{input[:mediaType]}\n"\
-			+"\t\t Sequence allowed:#{input[:sequenceAllowed]}\n\n"
+			input[:help] ="#{input[:desc]}"
+			input[:help] +=" (#{input[:mediaType]})" if input[:mediaType]!=nil and !input[:mediaType].empty?
 			@input_modifiers[modifier]=input
 			#@source==input if input[:name]=="source"
 		}
 		@script.outputs.each {|out|
-			modifier="--o-#{out[:name]}"
-		
-			out[:help] ="\n\t\t Desc:#{out[:desc]}\n"\
-			+"\t\t Media type:#{out[:mediaType]}\n"\
-			+"\t\t Sequence allowed:#{out[:sequenceAllowed]}\n\n"
+			modifier="--i-#{out[:name]}"
+			out[:help] ="#{out[:desc]}"
+			out[:help] +=" (#{out[:mediaType]})" if out[:mediaType]!=nil and !out[:mediaType].empty?
 			@output_modifiers[modifier]=out
 		}
 	end
