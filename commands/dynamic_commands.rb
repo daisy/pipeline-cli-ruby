@@ -148,6 +148,7 @@ class CommandScript < Command
 				opt[:tail]= " [#{opt[:type]}]"
 			end
 			opt[:help]= ""
+			opt[:help]+= " (required)" if opt[:required]=="true" 
 			opt[:help]+= " #{opt[:desc]}\n"
 			opt[:help]+= " (#{opt[:mediaType]})" if opt[:mediaType]!=nil and !opt[:mediaType].empty?
 			@opt_modifiers[modifier]=opt
