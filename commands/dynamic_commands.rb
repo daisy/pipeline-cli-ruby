@@ -94,14 +94,8 @@ class CommandScript < Command
 			}
 			@output_modifiers.keys.each{|output|
 				@output_modifiers[output][:value]=nil
-				if @output_modifiers[output][:sequenceAllowed]=='true'
-					opts.on(output+" output1,output2,output3",Array,@output_modifiers[output][:help]) do |v|
-					   @output_modifiers[output][:value] = v
-					end
-				else
-					opts.on(output+" output",@output_modifiers[output][:help]) do |v|
-					   @output_modifiers[output][:value] = [v]
-					end
+				opts.on(output+" output",@output_modifiers[output][:help]) do |v|
+					@output_modifiers[output][:value] = [v]
 				end
 
 			}
@@ -167,7 +161,7 @@ class CommandScript < Command
 			#@source==input if input[:name]=="source"
 		}
 		@script.outputs.each {|out|
-			modifier="--i-#{out[:name]}"
+			modifier="--o-#{out[:name]}"
 			out[:help] ="#{out[:desc]}"
 			out[:help] +=" (#{out[:mediaType]})" if out[:mediaType]!=nil and !out[:mediaType].empty?
 			@output_modifiers[modifier]=out
