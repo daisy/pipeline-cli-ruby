@@ -233,7 +233,7 @@ class XmlBuilder
 	end
 	def addOutputs
 		@script.outputs.each{ |output|
-			raise "Outptut empty: #{output[:name]}" if !(output[:value]!=nil && !output[:value].empty?)
+			raise "Output empty: #{output[:name]}" if !(output[:value]!=nil && !output[:value].empty?)
 			values=output[:value]
 			out_elem=Element.new E_OUTPUT
 			out_elem.attributes[A_NAME]=output[:name]
