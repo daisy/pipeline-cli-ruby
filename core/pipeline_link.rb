@@ -25,10 +25,11 @@ class PipelineLink
 			
 			if Ctxt.conf[Ctxt.conf.class::LOCAL] == true
 				execPath=File::expand_path(Ctxt.conf[Ctxt.conf.class::EXEC_LINE],@basePath)
+				puts execPath
 				Ctxt.logger.debug("executing daisy pipeline...")
-				Thread.new do
-					ex=IO.popen("\"#{execPath}\""+Ctxt.conf[Ctxt.conf.class::NULL])#{|line| line.read }
-				end
+				execArr='"'+execPath+'"'+Ctxt.conf[Ctxt.conf.class::NULL]
+
+				ex=IO.popen(execArr)
 
 				Ctxt.logger().debug("waiting for the ws to come up...")
 				CliWriter::ln "Waiting for the WS to come up"
