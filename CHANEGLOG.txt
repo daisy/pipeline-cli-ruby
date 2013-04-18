@@ -1,4 +1,12 @@
 
+version 1.6.0
+=============
+	* Get job's log file
+	* Job's nice name support
+	* Support for indexed results ( remote mode only )
+	* Output port support
+	* New script option layout
+
 version 1.5.2
 =============
 
