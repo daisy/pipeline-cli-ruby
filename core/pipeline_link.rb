@@ -25,7 +25,6 @@ class PipelineLink
 			
 			if Ctxt.conf[Ctxt.conf.class::LOCAL] == true
 				execPath=File::expand_path(Ctxt.conf[Ctxt.conf.class::EXEC_LINE],@basePath)
-				puts execPath
 				Ctxt.logger.debug("executing daisy pipeline...")
 				execArr='"'+execPath+'"'+Ctxt.conf[Ctxt.conf.class::NULL]
 
