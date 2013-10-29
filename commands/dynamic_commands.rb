@@ -45,13 +45,13 @@ class CommandScript < Command
 			job=dp2ws.job(@script,@niceName,@data,!@background,@quiet)
 			#store the id of the current job
 			Helpers.last_id_store(job)
-			if !@background && job.status=="DONE"
+			if !@background && done?(job.status)
 				dp2ws.job_zip_result(job.id,@outfile)
 				CliWriter::ln "Result stored at #{@outfile}"
 			end
 				
-			if !@persistent && job.status=="DONE"
-				if  dp2ws.delete_job(job.id)
+			if !@persistent && done?(job.status)
+                                if  dp2ws.delete_job(job.id)
 					CliWriter::ln " The job #{job.id} has been deleted from the server"
 				end
 
@@ -167,4 +167,8 @@ class CommandScript < Command
 			@output_modifiers[modifier]=out
 		}
 	end
+end
+
+def done?(status)
+        return status=="DONE" || status == "VALIDATION_FAIL"
 end
