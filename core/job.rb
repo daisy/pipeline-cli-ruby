@@ -155,7 +155,7 @@ class  Results
 			idxs=[]
 			mimes=[]
 			resElm.each_element(){ |child|
-				idxs<<child.attributes["href"].sub(res.href,'').sub('/'+from+'/','')
+				idxs<<child.attributes["href"].sub(res.href,'').sub("/#{from}/#{name}/idx/",'')
 				mimes<<child.attributes["mime"]
 			}
 
