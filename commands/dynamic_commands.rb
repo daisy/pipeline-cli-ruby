@@ -35,7 +35,7 @@ class CommandScript < Command
 			dp2ws=PipelineLink.new
 			@parser.parse(str_args)	
 			raise RuntimeError,"dp2 is running in remote mode, so you need to supply a zip file containing the data (--data)" if Ctxt.conf[Ctxt.conf.class::LOCAL]!=true && @data==nil
-			raise RuntimeError,"dp2 is running in remote mode, so you need to supply an output file to store the results (--file)" if Ctxt.conf[Ctxt.conf.class::LOCAL]!=true && @outfile==nil && !@background
+			raise RuntimeError,"you need to supply an output file to store the results (--file)" if @outfile==nil && !@background
 
 			CliWriter::ln "IGNORING #{@outfile} as the job is set to be executed in the background"  if @outfile!=nil && @background
 
@@ -45,7 +45,7 @@ class CommandScript < Command
 			job=dp2ws.job(@script,@niceName,@data,!@background,@quiet)
 			#store the id of the current job
 			Helpers.last_id_store(job)
-			if Ctxt.conf[Ctxt.conf.class::LOCAL]!=true && !@background &&job.status=="DONE"
+			if !@background && job.status=="DONE"
 				dp2ws.job_zip_result(job.id,@outfile)
 				CliWriter::ln "Result stored at #{@outfile}"
 			end
@@ -106,10 +106,10 @@ class CommandScript < Command
 				    @opt_modifiers[option][:value] = v
 				end
 			}
+                        opts.on("--output FILE","-o FILE","Zip file where to store the results from the server(not applied if running in background mode)") do |v|
+                                @outfile=v
+                        end
 			if Ctxt.conf[Ctxt.conf.class::LOCAL]!=true
-				opts.on("--file FILE","-f FILE","Zip file where to store the results from the server(not applied if running in background mode)") do |v|
-					@outfile=v
-				end
 				opts.on("--data ZIP_FILE","-d ZIP_FILE","Zip file with the data needed to perform the job (Keep in mind that options and inputs MUST be relative uris to the zip file's root)") do |v|
 					@data=File.open(File.expand_path(v), "rb")
 				end
