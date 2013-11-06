@@ -27,16 +27,19 @@ module Helpers
 	end
 	def last_id_store(job)
 		if ENV["OCRA_EXECUTABLE"]==nil
-			path=File.dirname(__FILE__)+"/../.lastid"
+			path=File.join(Dir.home(), ".dp2", "lastid")
 		else
 			path=File.dirname(ENV["OCRA_EXECUTABLE"])+"\\.lastid"
 		end
+
+                Dir.mkdir(File.dirname(path)) unless Dir.exists?(File.dirname(path))
+
 		Ctxt.logger.debug("writing id to #{path}")
 		File.open(path, 'w') {|f| f.write(job.id) }
 	end
 	def last_id_read
 		if ENV["OCRA_EXECUTABLE"]==nil
-			path=File.dirname(__FILE__)+"/../.lastid"
+			path=File.join(Dir.home(), ".dp2", "lastid")
 		else
 			path=File.dirname(ENV["OCRA_EXECUTABLE"])+"\\.lastid"
 		end
