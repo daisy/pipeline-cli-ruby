@@ -29,7 +29,9 @@ module Helpers
         def last_id_file
 		if ENV["OCRA_EXECUTABLE"]==nil
 			path=File.join(Dir.home(), ".daisy-pipeline","dp2", "lastid")
-		else
+                elsif Object::RUBY_PLATFORM =~ /darwin/i
+			path=File.join(Dir.home(), "Library","Application Support","DAISY Pipeline 2","dp2","lastid")
+                else
 			path=File.join(ENV["APPDATA"],"DAISY Pipeline 2","dp2","lastid")
 		end
                 return path
