@@ -25,25 +25,26 @@ module Helpers
 		Ctxt.logger.debug("uri: #{uri}")
 		return URI.escape(uri)
 	end
-	def last_id_store(job)
-		if ENV["OCRA_EXECUTABLE"]==nil
-			path=File.join(Dir.home(), ".dp2", "lastid")
-		else
-			path=File.dirname(ENV["OCRA_EXECUTABLE"])+"\\.lastid"
-		end
 
+        def last_id_file
+		if ENV["OCRA_EXECUTABLE"]==nil
+			path=File.join(Dir.home(), ".daisy-pipeline","dp2", "lastid")
+		else
+			path=File.join(ENV["APPDATA"],"DAISY Pipeline 2","dp2","lastid")
+		end
+                return path
+        end
+
+	def last_id_store(job)
+                path=last_id_file()
                 Dir.mkdir(File.dirname(path)) unless Dir.exists?(File.dirname(path))
 
 		Ctxt.logger.debug("writing id to #{path}")
 		File.open(path, 'w') {|f| f.write(job.id) }
 	end
+
 	def last_id_read
-		if ENV["OCRA_EXECUTABLE"]==nil
-			path=File.join(Dir.home(), ".dp2", "lastid")
-		else
-			path=File.dirname(ENV["OCRA_EXECUTABLE"])+"\\.lastid"
-		end
-		
+                path= last_id_file
 		id=""
 		if File.exists?(path)
 			f=File.open(path, 'r') 
