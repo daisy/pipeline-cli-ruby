@@ -27,19 +27,21 @@ module Helpers
 	end
 
         def last_id_file
-		if ENV["OCRA_EXECUTABLE"]==nil
-			path=File.join(Dir.home(), ".daisy-pipeline","dp2", "lastid")
-                elsif Object::RUBY_PLATFORM =~ /darwin/i
-			path=File.join(Dir.home(), "Library","Application Support","DAISY Pipeline 2","dp2","lastid")
+                if (Object::RUBY_PLATFORM =~ /darwin/i) != nil
+                        path=File.join(Dir.home(), "Library","Application Support","DAISY Pipeline 2","dp2","lastid")
+                elsif ENV["OCRA_EXECUTABLE"]!=nil
+                        path=File.join(ENV["APPDATA"],"DAISY Pipeline 2","dp2","lastid")
                 else
-			path=File.join(ENV["APPDATA"],"DAISY Pipeline 2","dp2","lastid")
-		end
+                        path=File.join(Dir.home(), ".daisy-pipeline","dp2", "lastid")
+                end
+
                 return path
+
         end
 
 	def last_id_store(job)
                 path=last_id_file()
-                Dir.mkdir(File.dirname(path)) unless Dir.exists?(File.dirname(path))
+                FileUtils.mkdir_p(File.dirname(path)) unless Dir.exists?(File.dirname(path))
 
 		Ctxt.logger.debug("writing id to #{path}")
 		File.open(path, 'w') {|f| f.write(job.id) }
