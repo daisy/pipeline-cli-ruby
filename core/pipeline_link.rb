@@ -41,6 +41,7 @@ class PipelineLink
 		end	
 		Ctxt.conf[Conf::AUTHENTICATE]=al.authentication
 		Ctxt.conf[Conf::WS_VERSION]=al.version
+		Ctxt.conf[Conf::LOCAL]=al.local
 		Ctxt.logger.debug("version #{Ctxt.conf[Conf::WS_VERSION]}")
 		return true
 	end

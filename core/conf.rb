@@ -28,7 +28,7 @@ class Conf
 
 			#Not configurable from args or file
 
-	CONST_FILTER=["authenticate","version","null","exec_line_nix","exec_line_win","base_uri","prog_name","short_name","base_dir","ws_version"]
+	CONST_FILTER=["local","authenticate","version","null","exec_line_nix","exec_line_win","base_uri","prog_name","short_name","base_dir","ws_version"]
 
 	def initialize(file)
 		__init_constants__

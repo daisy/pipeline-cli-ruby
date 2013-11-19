@@ -17,16 +17,16 @@ class AliveProcessor < ResultProcessor
 		Ctxt.logger.debug("from element: #{input.to_s}")
 		doc= Document.new input
 		aliveElem=XPath.first(doc,"//ns:alive",Resource::NS)
-		alive=Alive.new(aliveElem.attributes["mode"],aliveElem.attributes["authentication"],aliveElem.attributes["version"])
+		alive=Alive.new(aliveElem.attributes["localfs"]=="true",aliveElem.attributes["authentication"],aliveElem.attributes["version"])
 		
 		return alive 
 	end
 end
 
 class Alive
-	attr_accessor :mode,:authentication,:version
-	def initialize(mode,authentication,version)
-		@mode=mode
+	attr_accessor :local,:authentication,:version
+	def initialize(local,authentication,version)
+		@local=local
 		@authentication=authentication
 		@version=version
 	end
