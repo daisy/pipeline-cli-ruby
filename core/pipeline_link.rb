@@ -23,7 +23,7 @@ class PipelineLink
 		if !al
 
 			
-			if Ctxt.conf[Ctxt.conf.class::LOCAL] == true
+			if Ctxt.conf[Ctxt.conf.class::STARTING] == true && (Ctxt.conf[Ctxt.conf.class::HOST]=~/localhost/i)!=nil
 				execPath=File::expand_path(Ctxt.conf[Ctxt.conf.class::EXEC_LINE],@basePath)
 				Ctxt.logger.debug("executing daisy pipeline...")
 				execArr='"'+execPath+'"'+Ctxt.conf[Ctxt.conf.class::NULL]

@@ -22,7 +22,8 @@ class Conf
 			"prog_name"=>"" ,
 			"short_name"=>"" ,
 			"base_dir"=>"",
-			"version"=>""
+			"version"=>"",
+                        "starting"=>"Starts the framework in if it's not up"
 	
 	}
 
