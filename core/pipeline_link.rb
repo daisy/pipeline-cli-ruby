@@ -25,11 +25,17 @@ class PipelineLink
 			
 			if Ctxt.conf[Ctxt.conf.class::STARTING] == true && (Ctxt.conf[Ctxt.conf.class::HOST]=~/localhost/i)!=nil
 				execPath=File::expand_path(Ctxt.conf[Ctxt.conf.class::EXEC_LINE],@basePath)
+                                env={
+                                        "JAVA_OPTS"=>"-Dgosh.args=--noi"
+                                }
 				Ctxt.logger.debug("executing daisy pipeline...")
+
 				execArr='"'+execPath+'"'+Ctxt.conf[Ctxt.conf.class::NULL]
 
-				ex=IO.popen(execArr)
+				#ex=IO.popen(execArr)
 
+                                ex=Process.spawn(env,execArr)
+                                Process.detach(ex)
 				Ctxt.logger().debug("waiting for the ws to come up...")
 				CliWriter::ln "Waiting for the WS to come up"
 				al=wait_till_up
