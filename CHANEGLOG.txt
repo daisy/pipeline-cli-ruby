@@ -6,8 +6,8 @@ version 1.7
         * Fix single result handling
         * Move .lastid to the appropriate folder ( "%APP_DATA%/Daisy Pipeline 2/dp2/" in windows; "~/.daisy-pipeline/dp2" in linux and "~/Library/Application Support/DAISY Pipeline 2/dp2" in OS X
 
-version 1.6.0
-=============
+version 1.6
+===========
 	* Get job's log file
 	* Job's nice name support
 	* Support for indexed results ( remote mode only )
