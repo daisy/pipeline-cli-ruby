@@ -6,7 +6,7 @@ ws_timeup: ${pipeline.ws.timeout}
 #DP2 launch config 
 exec_line_nix: ${pipeline.ws.cmd.unix}
 exec_line_win: ${pipeline.ws.cmd.win}  
-local: ${pipeline.ws.local}
+starting: true
 # ROBOT CONF
 client_key: ${pipeline.ws.clientkey}
 client_secret: ${pipeline.ws.clientsecret}
