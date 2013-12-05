@@ -164,6 +164,11 @@ class CommandScript < Command
 		@script.inputs.each {|input|
 			modifier="--i-#{input[:name]}"
 			input[:help] ="#{input[:desc]}"
+			if input[:required]=="true" 
+				input[:help]+= " (required)" 
+			else
+				input[:help]+= " (optional)" 
+			end
 			input[:help] +=" (#{input[:mediaType]})" if input[:mediaType]!=nil and !input[:mediaType].empty?
 			@input_modifiers[modifier]=input
 			#@source==input if input[:name]=="source"

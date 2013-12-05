@@ -43,6 +43,7 @@ class Script
 			s+="\t\t Desc:#{input[:desc]}\n"
 			s+="\t\t Media type:#{input[:mediaType]}\n"
 			s+="\t\t Sequence allowed:#{input[:sequenceAllowed]}\n"
+			s+="\t\t Primary:#{input[:primary]}\n"
 		}
 		s+="\nOutputs:\n"
 		@outputs.each{ |output| 
@@ -95,6 +96,9 @@ class Script
 					:desc=>input.attributes["desc"],
 					:mediaType=>input.attributes["mediaType"],
 					:sequenceAllowed=>input.attributes["sequence"],
+                                        #:required instead of :primary, makes the code look more consistent
+                                        #at the end of the day is why the cli cares if a port is primary or not
+					:required=>input.attributes["primary"],
 				}
 				script.inputs.push(inp)
 		
@@ -238,13 +242,15 @@ class XmlBuilder
 	end
 	def addInputs
 
-		@script.inputs.each{ |input|
-			raise "Input empty: #{input[:name]}" if !(input[:value]!=nil && !input[:value].empty?)
-			values=input[:value]
-			in_elem=Element.new E_INPUT
-			in_elem.attributes[A_NAME]=input[:name]
-			@doc.root << in_elem
-			values.each{|file| in_elem.add_element E_ITEM,{A_VALUE=>Helpers.path_to_uri(file,@script.local)}} 
+                @script.inputs.each{ |input|
+                        raise "Input empty: #{input[:name]}" if !(input[:value]!=nil && !input[:value].empty?) && input[:required]=="true"
+                        if input[:value]!=nil && !input[:value].empty?
+                                values=input[:value]
+                                in_elem=Element.new E_INPUT
+                                in_elem.attributes[A_NAME]=input[:name]
+                                @doc.root << in_elem
+                                values.each{|file| in_elem.add_element E_ITEM,{A_VALUE=>Helpers.path_to_uri(file,@script.local)}} 
+                        end
 		}
 	end
 	def addOutputs
