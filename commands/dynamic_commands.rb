@@ -101,9 +101,17 @@ class CommandScript < Command
 			}
 
 			@opt_modifiers.keys.each{|option|
-				@opt_modifiers[option][:value]=nil
-				opts.on(option+ @opt_modifiers[option][:tail],@opt_modifiers[option][:help]) do |v|
-				    @opt_modifiers[option][:value] = v
+				if @opt_modifiers[option][:sequenceAllowed]=='true'
+                                        type=@opt_modifiers[option][:tail].strip
+                                        values="#{type}_1,#{type}_2,#{type}_3"
+					opts.on(option+values,Array,@opt_modifiers[option][:help]) do |v|
+					   @opt_modifiers[option][:value] = v
+					end
+				else
+                                        @opt_modifiers[option][:value]=nil
+                                        opts.on(option+ @opt_modifiers[option][:tail],@opt_modifiers[option][:help]) do |v|
+                                            @opt_modifiers[option][:value] = v
+                                        end
 				end
 			}
                         opts.on("--output FILE","-o FILE","Zip file where to store the results from the server(not applied if running in background mode)") do |v|

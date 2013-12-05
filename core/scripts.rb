@@ -73,6 +73,7 @@ class Script
 					:name=>option.attributes["name"],
 					:required=>option.attributes["required"],
 					:type=>option.attributes["type"],
+                                        :sequenceAllowed=>option.attributes["sequence"],
 				}
 				script.opts.push(opt)
 
@@ -214,8 +215,23 @@ class XmlBuilder
 				n=Element.new E_OPTION
 				n.attributes[A_NAME]=opt[:name];
 				value=opt[:value]
-				value = Helpers.path_to_uri(value,@script.local) if opt[:type]=="anyFileURI" || opt[:type] == "anyDirURI"
-				n.text=value
+                                #a bit of curring
+                                val_processor=nil
+                                if isPath(opt[:type])
+                                        val_processor=lambda{|file| Helpers.path_to_uri(file,@script.local)}
+                                else
+                                        val_processor=lambda{|file| file}
+                                end
+                                if value.kind_of?(Array)
+			                value.each{|v| 
+                                                n.add_element E_ITEM,{A_VALUE=>val_processor.(v)}
+                                        } 
+
+                                else
+				        n.attributes[A_NAME]=opt[:name];
+				        value = val_processor.(value) 
+				        n.text=value
+                                end
 				@doc.root << n
 			end
 		}
@@ -241,6 +257,9 @@ class XmlBuilder
 			values.each{|file| out_elem.add_element E_ITEM,{A_VALUE=>Helpers.path_to_uri(file,@script.local)}} 
 		}
 	end
+        def isPath type
+                return type == "anyFileURI" || type == "anyDirURI"
+        end
 end
 
 
