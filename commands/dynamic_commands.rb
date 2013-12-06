@@ -82,11 +82,11 @@ class CommandScript < Command
 			@input_modifiers.keys.each{|input|
 				@input_modifiers[input][:value]=nil
 				if @input_modifiers[input][:sequenceAllowed]=='true'
-					opts.on(input+" input1,input2,input3",Array,@input_modifiers[input][:help]) do |v|
+					opts.on(input+" #{@input_modifiers[input][:tail]}",Array,@input_modifiers[input][:help]) do |v|
 					   @input_modifiers[input][:value] = v
 					end
 				else
-					opts.on(input+" input",@input_modifiers[input][:help]) do |v|
+					opts.on(input+" #{@input_modifiers[input][:tail]}",@input_modifiers[input][:help]) do |v|
 					   @input_modifiers[input][:value] = [v]
 					end
 				end
@@ -164,10 +164,16 @@ class CommandScript < Command
 		@script.inputs.each {|input|
 			modifier="--i-#{input[:name]}"
 			input[:help] ="#{input[:desc]}"
+                        if input[:sequenceAllowed]=="true"
+                                input[:tail]="input1,input2,input3" 
+                        else
+                                input[:tail]="input1,input2,input3" 
+                        end
 			if input[:required]=="true" 
-				input[:help]+= " (required)" 
+				input[:help]= " (required) "+input[:help] 
 			else
-				input[:help]+= " (optional)" 
+				input[:help]= " (optional) "+input[:help] 
+                                input[:tail]="[#{input[:tail]}]"
 			end
 			input[:help] +=" (#{input[:mediaType]})" if input[:mediaType]!=nil and !input[:mediaType].empty?
 			@input_modifiers[modifier]=input

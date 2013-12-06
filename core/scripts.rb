@@ -43,7 +43,7 @@ class Script
 			s+="\t\t Desc:#{input[:desc]}\n"
 			s+="\t\t Media type:#{input[:mediaType]}\n"
 			s+="\t\t Sequence allowed:#{input[:sequenceAllowed]}\n"
-			s+="\t\t Primary:#{input[:primary]}\n"
+			s+="\t\t required:#{input[:requried]}\n"
 		}
 		s+="\nOutputs:\n"
 		@outputs.each{ |output| 
@@ -96,9 +96,7 @@ class Script
 					:desc=>input.attributes["desc"],
 					:mediaType=>input.attributes["mediaType"],
 					:sequenceAllowed=>input.attributes["sequence"],
-                                        #:required instead of :primary, makes the code look more consistent
-                                        #at the end of the day is why the cli cares if a port is primary or not
-					:required=>input.attributes["primary"],
+					:required=>input.attributes["required"],
 				}
 				script.inputs.push(inp)
 		
