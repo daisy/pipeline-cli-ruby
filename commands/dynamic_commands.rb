@@ -35,7 +35,7 @@ class CommandScript < Command
 			dp2ws=PipelineLink.new
 			@parser.parse(str_args)	
 			raise RuntimeError,"dp2 is running in remote mode, so you need to supply a zip file containing the data (--data)" if Ctxt.conf[Ctxt.conf.class::LOCAL]!=true && @data==nil
-			raise RuntimeError,"you need to supply an output file to store the results (--file)" if @outfile==nil && !@background
+			raise RuntimeError,"you need to supply an output file to store the results (--output)" if @outfile==nil && !@background
 
 			CliWriter::ln "IGNORING #{@outfile} as the job is set to be executed in the background"  if @outfile!=nil && @background
 
