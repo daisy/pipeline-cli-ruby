@@ -5,11 +5,11 @@
     <groupId>org.daisy</groupId>
     <artifactId>daisy</artifactId>
     <version>2</version>
-    <relativePath/>
+    <relativePath />
   </parent>
   <groupId>org.daisy.pipeline</groupId>
   <artifactId>cli</artifactId>
-  <version>1.7-SNAPSHOT</version>
+  <version>1.7</version>
   <packaging>pom</packaging>
   <name>DAISY Pipeline 2 :: Command Line Interface</name>
   <description>Command Line Interface for the DAISY Pipeline 2.</description>
@@ -37,4 +37,8 @@
       </plugin>
     </plugins>
   </build>
+
+  <scm>
+    <tag>v1.7</tag>
+  </scm>
 </project>
