@@ -1,13 +1,12 @@
 version 1.7
 =============
-        * Merge remote and local modes
-                * This means that now the results are always get through a zipped file with the --output option
-        * Handle VALIDATION_FAIL status 
-        * Fix single result handling
-        * Move .lastid to the appropriate folder ( "%APP_DATA%/Daisy Pipeline 2/dp2/" in windows; "~/.daisy-pipeline/dp2" in linux and "~/Library/Application Support/DAISY Pipeline 2/dp2" in OS X
-        * Support for sequence options
-        * Allow sequential options
-        * config.yml changes: the "local" property is deleted as it is read from the webservice. The property "starting" has been included to controll the ability of starting a new webservice in localhost.
+  * Merge remote and local modes
+  * This means that now the results are always get through a zipped file with the --output option
+  * Handle VALIDATION_FAIL status 
+  * Fix single result handling
+  * Move .lastid to the appropriate folder ( "%APP_DATA%/Daisy Pipeline 2/dp2/" in windows; "~/.daisy-pipeline/dp2" in linux and "~/Library/Application Support/DAISY Pipeline 2/dp2" in OS X
+  * Support for sequence options
+  * config.yml changes: the "local" property is deleted as it is read from the webservice. The property "starting" has been included to controll the ability of starting a new webservice in localhost.
 
 version 1.6
 ===========
