@@ -24,7 +24,7 @@ class Conf
 			"base_dir"=>"",
 			"version"=>"",
                         "starting"=>"Starts the framework in if it's not up"
-	
+
 	}
 
 			#Not configurable from args or file
@@ -35,7 +35,7 @@ class Conf
 		__init_constants__
 		@map=YAML.load_file file
 		Ctxt.logger.debug(@map)
-		#HACK: the null redirects avoids win to get stuck creating the 
+		#HACK: the null redirects avoids win to get stuck creating the
 		update_vals
 	end
 
@@ -49,10 +49,13 @@ class Conf
 	def __init_constants__
 		CONFIG_ITEMS.keys.each do |cnst|
 			Conf.const_set(cnst.upcase,cnst)
-		end	
+		end
 	end
 	def update_vals
-		if @map[DEBUG]==true||@map[DEBUG]=='true'
+                convert = Hash.new{|h,k| h[k] = k}.merge({"true" => true, "false" => false})
+                @map.update(@map){|k,v| convert[v]}
+
+		if @map[DEBUG]
 
 			Ctxt.logger.level=Logger::DEBUG
 		else
@@ -63,11 +66,11 @@ class Conf
 			@map[EXEC_LINE]=@map[EXEC_LINE_WIN]
 			@map[NULL]=" >  NUL 2>&1"
 		else
-			@map[EXEC_LINE]=@map[EXEC_LINE_NIX] 
-			@map[NULL]=" 1> /dev/null 2>&1" 
+			@map[EXEC_LINE]=@map[EXEC_LINE_NIX]
+			@map[NULL]=" 1> /dev/null 2>&1"
 		end
 		@map[BASE_URI]= @map[HOST]+":"+@map[PORT].to_s+"/"+@map[WS_PATH]
 	end
 
-end	
-	
+end
+

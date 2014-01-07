@@ -8,18 +8,18 @@ class AliveResource < Resource
 		@result=Rest.get_resource(buildUri())
 		return @resultProcessor.process(@result)
 	end
-end	
+end
 class AliveProcessor < ResultProcessor
 	def process(input)
 		Ctxt.logger.debug("alive process input : #{input!=nil}")
-		return nil if input==nil 
+		return nil if input==nil
 
 		Ctxt.logger.debug("from element: #{input.to_s}")
 		doc= Document.new input
 		aliveElem=XPath.first(doc,"//ns:alive",Resource::NS)
-		alive=Alive.new(aliveElem.attributes["localfs"]=="true",aliveElem.attributes["authentication"],aliveElem.attributes["version"])
-		
-		return alive 
+		alive=Alive.new(aliveElem.attributes["mode"]=="local",aliveElem.attributes["authentication"],aliveElem.attributes["version"])
+
+		return alive
 	end
 end
 
@@ -30,5 +30,5 @@ class Alive
 		@authentication=authentication
 		@version=version
 	end
-	
+
 end
