@@ -57,7 +57,7 @@ def main
 		dynCommands=DynamicCommands.get
 	rescue Exception=>e
 		CliWriter::err " #{e.message}"
-		exit (-1)
+		exit(-1)
 	end
 	dynCommands.each{|cmd| cli.addDynamicCommand(cmd)}
 

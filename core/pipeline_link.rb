@@ -138,6 +138,13 @@ class PipelineLink
 		return QueueResource.new().getResource	
 	end	
 
+	def queue_down(id)
+		return QueueDownResource.new(id).getResource	
+	end	
+	def queue_up(id)
+		return QueueUpResource.new(id).getResource	
+	end	
+
 	def halt(key)
 		return HaltResource.new(key).getResource	
 	end	

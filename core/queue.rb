@@ -12,6 +12,22 @@ class QueueResource< Resource
 	end	
 end
 
+class QueueUpResource< Resource
+	def initialize(jobId)
+		args={}
+		args[:id]=jobId 
+		super("/queue/up",args,QueueProcessor.new)
+	end	
+end
+
+class QueueDownResource< Resource
+	def initialize(jobId)
+		args={}
+		args[:id]=jobId 
+		super("/queue/down",args,QueueProcessor.new)
+	end	
+end
+
 class QueueEntry
         attr_accessor :jobId, :score
         def initialize()
