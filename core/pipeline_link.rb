@@ -85,12 +85,12 @@ class PipelineLink
 		return nil
 	end
 
-	def job(script,name,data,wait,quiet)
+	def job(script,name,priority,data,wait,quiet)
 		Ctxt.logger.debug("Quiet job:#{quiet}")
 		job=nil
 		msgIdx=0
 		#if alive
-			job=JobResource.new.postResource(script.to_xml_request(name),data)
+			job=JobResource.new.postResource(script.to_xml_request(name,priority),data)
 			CliWriter::ln "Job with id #{job.id} submitted to the server"
 			if wait==true
 				begin
