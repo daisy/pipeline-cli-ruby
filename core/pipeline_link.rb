@@ -3,6 +3,7 @@ require_rel './core/scripts'
 require_rel './core/alive'
 require_rel './core/job'
 require_rel './core/halt'
+require_rel './core/queue'
 #TODO asking if the service is alive before every call may not be a good idea, store that it's alive once and asume it in next calls
 class PipelineLink
 	def initialize
@@ -131,6 +132,10 @@ class PipelineLink
 	
 	def job_log(id,outpath)
 		return JobLogResource.new(id,outpath).getResource	
+	end	
+
+	def queue
+		return QueueResource.new().getResource	
 	end	
 
 	def halt(key)
