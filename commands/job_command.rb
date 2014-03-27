@@ -20,6 +20,7 @@ class JobCommand < IdBasedCommand
 				
 				str+="\t Name: #{job.nicename}\n" if job.nicename!=nil
 				str+="\t Status: #{job.status}\n" 
+				str+="\t Priority: #{job.priority}\n" 
 				str+="\t Script: #{job.script.id}\n"
 				job.messages.each{|msg| str+=msg.to_s+"\n"} if @showMsgs
 				str+=job.results.to_s if @showRes
