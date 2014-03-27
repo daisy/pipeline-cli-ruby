@@ -60,6 +60,12 @@ class ClientModifyCommand < IdBasedCommand
 			opts.on("-s SECRET","--secret SECRET","Client secret") do |v|
 				@client.secret=v
 			end
+			opts.on("-p PRIORITY","--priority PRIORITY","client priority") do |v|
+                                if v!="high" && v!="medium" && v!="low"
+                                        raise "Priority must be high, medium or low. The value #{v} is not allowed"
+                                end
+				@client.priority=v
+			end
 		end
 		@parser.banner="#{Ctxt.conf[Conf::PROG_NAME]} "+ @name + " [options] CLIENTID"
 	end
