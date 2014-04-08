@@ -31,6 +31,7 @@ require_rel './core/rest'
 require_rel './core/result_processor'
 require_rel './core/scripts'
 require_rel './core/halt'
+require_rel './core/queue'
 require_rel './commands/delete_command'
 require_rel './commands/result_command'
 require_rel './commands/dynamic_commands'
@@ -40,6 +41,7 @@ require_rel './commands/log_command'
 require_rel './commands/jobs_command'
 require_rel './commands/halt_command'
 require_rel './commands/version_command'
+require_rel './commands/queue_command'
 include REXML
 def main
 	version="1.7"
@@ -55,7 +57,7 @@ def main
 		dynCommands=DynamicCommands.get
 	rescue Exception=>e
 		CliWriter::err " #{e.message}"
-		exit (-1)
+		exit(-1)
 	end
 	dynCommands.each{|cmd| cli.addDynamicCommand(cmd)}
 
@@ -65,6 +67,7 @@ def main
 	cli.addStaticCommand(DeleteCommand.new)
 	cli.addStaticCommand(ResultCommand.new)
 	cli.addStaticCommand(LogCommand.new)
+	cli.addStaticCommand(QueueCommand.new)
 
 	if Ctxt.conf[Ctxt.conf.class::LOCAL].to_s=="true"
 		cli.addStaticCommand(HaltCommand.new)

@@ -105,7 +105,7 @@ class Script
 			return script	
 	end
 
-	def to_xml_request(jobName)
+	def to_xml_request(jobName,priority)
 	
 #		<jobRequest xmlns='http://www.daisy.org/ns/pipeline/data'>
 #	            <nicename>Jobs nice name</nicename>
@@ -117,7 +117,7 @@ class Script
 #		    <option name='opt-css-filename'>the-css-file.css</option>
 #		    <option name='opt-zedai-filename'>the-zedai-file.xml</option>
 #		</jobRequest>
-		doc=XmlBuilder.new(self,jobName).xml
+		doc=XmlBuilder.new(self,jobName,priority).xml
 		return doc.to_s 
 		
 	end
@@ -173,6 +173,7 @@ class XmlBuilder
 	NS='http://www.daisy.org/ns/pipeline/data'
 	E_JOB_REQUEST='jobRequest'
 	E_JOB_NAME='nicename'
+	E_PRIORITY='priority'
 	E_SCRIPT='script'
 	E_INPUT='input'
 	E_OUTPUT='output'
@@ -184,9 +185,10 @@ class XmlBuilder
 	A_VALUE='value'
 
 		
-	def initialize(script,jobName)
+	def initialize(script,jobName,priority)
 		@script=script
 		@jobName=jobName
+                @priority=priority
 	end
 	def xml
 		@doc= Document.new
@@ -199,6 +201,9 @@ class XmlBuilder
 			nameElem.text=@jobName
 			jobReqElem << nameElem
 		end
+                priority = Element.new E_PRIORITY
+                priority.text = @priority 
+		jobReqElem << priority 
 		addInputs
 		addOutputs
 		addOptions

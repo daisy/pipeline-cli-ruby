@@ -26,6 +26,7 @@ class CommandScript < Command
 		@quiet=false
 		@source=nil
 		@niceName=nil
+                @priority="medium"
 		
 		build_modifiers
 		build_parser
@@ -42,7 +43,7 @@ class CommandScript < Command
 			if @outfile!=nil && !@background
 				raise RuntimeError,"#{@outfile}: directory doesn't exists " if !File.exists?(File.dirname(File.expand_path(@outfile)))
 			end	
-			job=dp2ws.job(@script,@niceName,@data,!@background,@quiet)
+			job=dp2ws.job(@script,@niceName,@priority,@data,!@background,@quiet)
 			#store the id of the current job
 			Helpers.last_id_store(job)
 			if !@background && done?(job.status)
@@ -125,6 +126,17 @@ class CommandScript < Command
 			opts.on("-n","--name [NAME]","Job's nice name" )do |v|
 				@niceName=v
 			end
+
+			opts.on("-P","--priority [high|medium|low]","Job's priority" )do |v|
+                                if v!="high" && v!="medium" && v!="low"
+                                        raise "Priority must be high, medium or low. The value #{v} is not allowed"
+                                end
+				@priority=v
+			end
+			opts.on("-{","--name [NAME]","Job's nice name" )do |v|
+				@niceName=v
+			end
+
 			opts.on("--background","-b","Runs the job in the background (will be persistent)") do |v|
 				@background=true
 				@persistent=true

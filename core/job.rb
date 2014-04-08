@@ -94,7 +94,7 @@ class Message
 end
 class Job
 
-	attr_accessor :id,:status,:script,:messages,:log,:nicename,:results
+	attr_accessor :id,:status,:script,:messages,:log,:nicename,:results,:priority
 	def initialize(id)	
 		@id=id
 		@messages=[]
@@ -105,6 +105,7 @@ class Job
 		s="Job Id: #{@id}\n"
 		s+="\t Status: #{@status}\n"
 		s+="\t Name: #{@nicename}\n"
+		s+="\t Priority: #{@priority}\n"
 		s+="\t Script: #{@script.uri}\n" if @script!=nil
 		s+="\t Result: #{@results.href}\n" if @result!=nil
 		s+="\t Log: #{@log}\n" if @log!=nil
@@ -176,6 +177,7 @@ class JobBuilder
 		Ctxt.logger.debug("from element: #{element.to_s}")
 		job=Job.new(element.attributes["id"])
 		job.status=element.attributes["status"]
+                job.priority=element.attributes["priority"]
 	
 		xscript=XPath.first(element,"./ns:script",Resource::NS)
 		xnicename=XPath.first(element,"./ns:nicename",Resource::NS)

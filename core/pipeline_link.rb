@@ -3,6 +3,7 @@ require_rel './core/scripts'
 require_rel './core/alive'
 require_rel './core/job'
 require_rel './core/halt'
+require_rel './core/queue'
 #TODO asking if the service is alive before every call may not be a good idea, store that it's alive once and asume it in next calls
 class PipelineLink
 	def initialize
@@ -85,12 +86,12 @@ class PipelineLink
 		return nil
 	end
 
-	def job(script,name,data,wait,quiet)
+	def job(script,name,priority,data,wait,quiet)
 		Ctxt.logger.debug("Quiet job:#{quiet}")
 		job=nil
 		msgIdx=0
 		#if alive
-			job=JobResource.new.postResource(script.to_xml_request(name),data)
+			job=JobResource.new.postResource(script.to_xml_request(name,priority),data)
 			CliWriter::ln "Job with id #{job.id} submitted to the server"
 			if wait==true
 				begin
@@ -131,6 +132,17 @@ class PipelineLink
 	
 	def job_log(id,outpath)
 		return JobLogResource.new(id,outpath).getResource	
+	end	
+
+	def queue
+		return QueueResource.new().getResource	
+	end	
+
+	def queue_down(id)
+		return QueueDownResource.new(id).getResource	
+	end	
+	def queue_up(id)
+		return QueueUpResource.new(id).getResource	
 	end	
 
 	def halt(key)

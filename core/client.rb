@@ -34,13 +34,14 @@ end
 
 class Client
 	ROLES=["ADMIN","CLIENTAPP"]
-	attr_accessor :id,:secret,:role,:contact,:href
+	attr_accessor :id,:secret,:role,:contact,:href,:priority
 	def initialize
 		@id=""
 		@secret=""
 		@role=""
 		@contact=""
 		@href=""
+		@priority=""
 		
 	end
 
@@ -49,6 +50,7 @@ class Client
 		s+="\tSecret: #{@secret}\n"
 		s+="\tRole: #{@role}\n"
 		s+="\tContact: #{@contact}\n"
+		s+="\tPriority: #{@priority}\n"
 	end
 end
 class ClientBuilder
@@ -59,6 +61,7 @@ class ClientBuilder
 	A_SECRET='secret'
 	A_ROLE='role'
 	A_CONTACT='contact'
+	A_PRIORITY='priority'
 	def fromXml(element)
 		Ctxt.logger.debug("client from xml: #{element.to_s}")
 		client= Client.new
@@ -67,6 +70,7 @@ class ClientBuilder
 		client.role=element.attributes[A_ROLE]
 		client.contact=element.attributes[A_CONTACT]
 		client.href=element.attributes[A_HREF]
+		client.priority=element.attributes[A_PRIORITY]
 		return client
 	end
 	def toXml(client)
@@ -78,6 +82,7 @@ class ClientBuilder
 		clientElem.attributes[ A_SECRET ]=client.secret
 		clientElem.attributes[ A_ROLE ]=client.role.upcase
 		clientElem.attributes[ A_CONTACT ]=client.contact
+		clientElem.attributes[ A_PRIORITY]=client.priority
 		doc<< clientElem
 		return doc
 	end
