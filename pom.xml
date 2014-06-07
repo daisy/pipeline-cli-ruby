@@ -9,7 +9,7 @@
   </parent>
   <groupId>org.daisy.pipeline</groupId>
   <artifactId>cli</artifactId>
-  <version>1.8-SNAPSHOT</version>
+  <version>1.8</version>
   <packaging>pom</packaging>
   <name>DAISY Pipeline 2 :: Command Line Interface</name>
   <description>Command Line Interface for the DAISY Pipeline 2.</description>
@@ -37,4 +37,8 @@
       </plugin>
     </plugins>
   </build>
+
+  <scm>
+    <tag>v1.8</tag>
+  </scm>
 </project>
