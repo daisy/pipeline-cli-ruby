@@ -5,7 +5,7 @@ ws_path: ws
 ws_timeup: 25 
 #DP2 launch config 
 exec_line_nix: ../pipeline-assembly/target/dev-launcher/bin/pipeline2  
-exec_line_win: ../pipeline-assembly/target/dev-launcher/bin/pipeline2.bat 
+exec_line_win: C:\Program Files\DAISY Pipeline 2\daisy-pipeline\bin\pipeline2.bat 
 #starts the fwk in case it is not running
 starting: false 
 # ROBOT CONF
