@@ -27,11 +27,12 @@ class Cli
 	end
 	
 	def main(args)
+                ret=0
 		cmd,args=checkArgs(args)
 		if cmd==nil
 			puts "Usage: #{Ctxt.conf[Conf::PROG_NAME]} command [options]\n"
 			puts "type #{Ctxt.conf[Conf::PROG_NAME]} help for more info\n"
-			return nil 
+			return -1 
 		end
 		ver=VersionCommand.new
 		@static_cmds["help"]=HelpCommand.new(@static_cmds,@dyn_cmds,ver,@cnfParser)
@@ -42,7 +43,10 @@ class Cli
 		if cmds.has_key?(cmd)
 			begin
 				Ctxt.logger.debug("cmd #{cmd}")
-				cmds[cmd].execute(args[1..-1])
+				ret=cmds[cmd].execute(args[1..-1])
+                                if ret==nil
+                                        ret=0
+                                end 
 			rescue Exception=>e
 				error=e.message
 				hasErr=true	
@@ -54,9 +58,9 @@ class Cli
 		if hasErr
 			CliWriter::err( "#{error}\n\n") if error!=nil && !error.empty?
 			puts cmds["help"].help
-			return nil
+			return ret=-1 
 		end
-		return true
+		return ret 
 	end
 	
 	def checkArgs(args)

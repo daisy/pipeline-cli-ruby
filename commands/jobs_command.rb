@@ -23,7 +23,9 @@ class JobsCommand < Command
 			Ctxt.logger.debug(e)
 			CliWriter::err "#{e}\n\n"
 			#puts to_s
+                        return -1
 		end
+                return 0
 	end
 	def help
 		return "Shows the status for every job"	

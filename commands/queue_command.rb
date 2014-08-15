@@ -43,7 +43,9 @@ class QueueCommand < Command
 		rescue Exception => e
 			Ctxt.logger.debug(e)
 			CliWriter::err "#{e}\n\n"
+                        return -1
 		end
+                return 0
 	end
 
 	def help

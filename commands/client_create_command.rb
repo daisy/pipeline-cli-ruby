@@ -22,7 +22,9 @@ class ClientCreateCommand < Command
 			Ctxt.logger.debug(e)
 			CliWriter::err "#{e.message}\n\n"
 			puts help
+                        return -1
 		end
+                return 0
 	end
 	def help
 		return @parser.help

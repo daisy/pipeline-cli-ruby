@@ -29,7 +29,9 @@ class ResultCommand < IdBasedCommand
 			Ctxt.logger.debug(e)
 			CliWriter::err "#{e}\n\n"
 			puts help
+                        return -1
 		end
+                return 0
 	end
 	def help
 		return @parser.help

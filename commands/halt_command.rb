@@ -11,14 +11,16 @@ class HaltCommand < Command
 			
 		begin
 			@parser.parse(str_args)
-			res=PipelineLink.new.halt(get_key)
+			PipelineLink.new.halt(get_key)
 			CliWriter::ln "The daisy pipeline 2 WS has been halted"
 		rescue Exception => e
 			 
 			Ctxt.logger.debug(e)
 			CliWriter::err "#{e}\n\n"
 			puts help
+                        return -1
 		end
+                return 0
 	end
 	def help
 		return @parser.help

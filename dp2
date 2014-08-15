@@ -74,7 +74,7 @@ def main
 	else
 	end
 	#there we go!
-	return cli.main(ARGV)
+	exit(cli.main(ARGV))
 end
 
 # execution starts here
