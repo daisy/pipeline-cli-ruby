@@ -1,6 +1,8 @@
 Command-Line Interface for the DAISY Pipeline 2
 ===============================================
 
+**WARNING**: this command line tool is deprecated – use the [Go implementation](https://github.com/daisy/pipeline-cli-go) instead
+
 
 How to build
 ------------
